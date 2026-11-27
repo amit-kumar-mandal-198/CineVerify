@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   AlertCircle,
   ArrowLeft,
@@ -35,7 +37,12 @@ const MOCK_VERDICT_KEYS: ReadonlyArray<VerdictLabel> = [
   "UNVERIFIED",
 ];
 
-export default function VerifyPage() {
+function VerifyPageContent() {
+  const searchParams = useSearchParams();
+  const initialClaim = searchParams.get("claim") ?? "";
+  const rawType = searchParams.get("type");
+  const initialType: InputType = rawType === "url" ? "url" : "text";
+
   const [status, setStatus] = useState<VerifyStatus>("idle");
   const [result, setResult] = useState<VerificationResponse | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -111,9 +118,23 @@ export default function VerifyPage() {
         </p>
       </div>
 
-      {status === "idle" && (
-        <div className="space-y-6">
-          <ClaimInput onSubmit={handleVerify} isLoading={false} />
+      <AnimatePresence mode="wait">
+        {status === "idle" && (
+          <motion.div
+            key="idle"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            className="space-y-6"
+          >
+            <ClaimInput
+              key={`${initialType}:${initialClaim}`}
+              onSubmit={handleVerify}
+              isLoading={false}
+              initialClaim={initialClaim}
+              initialType={initialType}
+            />
 
           {IS_MOCK_MODE && (
             <div className="rounded-xl border border-dashed border-zinc-300 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-900/50">
@@ -134,14 +155,19 @@ export default function VerifyPage() {
               </div>
             </div>
           )}
-        </div>
-      )}
+          </motion.div>
+        )}
 
-      {status === "loading" && (
-        <section
-          aria-live="polite"
-          className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 sm:p-8"
-        >
+        {status === "loading" && (
+          <motion.section
+            key="loading"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            aria-live="polite"
+            className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 sm:p-8"
+          >
           <div className="flex items-center gap-3">
             <Loader2
               className="h-5 w-5 animate-spin text-amber-500"
@@ -188,11 +214,16 @@ export default function VerifyPage() {
               );
             })}
           </ol>
-        </section>
+        </motion.section>
       )}
 
       {status === "error" && (
-        <section
+        <motion.section
+          key="error"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.2 }}
           role="alert"
           className="rounded-xl border border-red-200 bg-red-50 p-6 dark:border-red-900/70 dark:bg-red-950/30"
         >
@@ -228,11 +259,17 @@ export default function VerifyPage() {
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
       )}
 
       {status === "success" && result && (
-        <div className="space-y-6">
+        <motion.div
+          key="success"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="space-y-6"
+        >
           <div className="flex items-center justify-between">
             <button
               type="button"
@@ -245,8 +282,23 @@ export default function VerifyPage() {
           </div>
 
           <VerificationReport report={result} />
-        </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </main>
+  );
+}
+
+export default function VerifyPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
+          <div className="h-64 animate-pulse rounded-xl border border-zinc-200 bg-white/60 dark:border-zinc-800 dark:bg-zinc-900/60" />
+        </main>
+      }
+    >
+      <VerifyPageContent />
+    </Suspense>
   );
 }

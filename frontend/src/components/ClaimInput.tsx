@@ -1,12 +1,22 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
-import { AlertCircle, FileText, Link2, Loader2, Search } from "lucide-react";
+import { useState, type FormEvent, type KeyboardEvent } from "react";
+import {
+  AlertCircle,
+  ClipboardPaste,
+  FileText,
+  Link2,
+  Loader2,
+  Search,
+  X,
+} from "lucide-react";
 import type { InputType } from "@/types/api";
 
 export interface ClaimInputProps {
   onSubmit: (claim: string, type: InputType) => Promise<void>;
   isLoading: boolean;
+  initialClaim?: string;
+  initialType?: InputType;
 }
 
 const EXAMPLE_CLAIMS: ReadonlyArray<{ label: string; claim: string; type: InputType }> = [
@@ -36,9 +46,14 @@ function isValidHttpUrl(value: string): boolean {
   }
 }
 
-export default function ClaimInput({ onSubmit, isLoading }: ClaimInputProps) {
-  const [inputType, setInputType] = useState<InputType>("text");
-  const [claim, setClaim] = useState("");
+export default function ClaimInput({
+  onSubmit,
+  isLoading,
+  initialClaim = "",
+  initialType = "text",
+}: ClaimInputProps) {
+  const [inputType, setInputType] = useState<InputType>(initialType);
+  const [claim, setClaim] = useState(initialClaim);
   const [error, setError] = useState<string | null>(null);
 
   const trimmedClaim = claim.trim();
@@ -53,6 +68,25 @@ export default function ClaimInput({ onSubmit, isLoading }: ClaimInputProps) {
     setInputType(example.type);
     setClaim(example.claim);
     setError(null);
+  }
+
+  async function handlePaste() {
+    try {
+      const text = await navigator.clipboard.readText();
+      if (text) {
+        setClaim(text);
+        setError(null);
+      }
+    } catch {
+      // Clipboard read may be denied by browser permissions
+    }
+  }
+
+  function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
+    if ((event.metaKey || event.ctrlKey) && event.key === "Enter" && !isSubmitDisabled) {
+      event.preventDefault();
+      event.currentTarget.form?.requestSubmit();
+    }
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -128,35 +162,81 @@ export default function ClaimInput({ onSubmit, isLoading }: ClaimInputProps) {
         </label>
 
         {inputType === "text" ? (
-          <textarea
-            id="claim-input"
-            rows={4}
-            value={claim}
-            disabled={isLoading}
-            onChange={(e) => {
-              setClaim(e.target.value);
-              if (error) setError(null);
-            }}
-            placeholder="e.g. Pushpa 3 releasing on Christmas 2027"
-            aria-invalid={error !== null}
-            aria-describedby={error ? "claim-input-error" : undefined}
-            className="w-full rounded-lg border border-zinc-300 bg-zinc-50 px-3.5 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:bg-zinc-950"
-          />
+          <div className="relative">
+            <textarea
+              id="claim-input"
+              rows={4}
+              value={claim}
+              disabled={isLoading}
+              onKeyDown={handleKeyDown}
+              onChange={(e) => {
+                setClaim(e.target.value);
+                if (error) setError(null);
+              }}
+              placeholder="e.g. Pushpa 3 releasing on Christmas 2027"
+              aria-invalid={error !== null}
+              aria-describedby={error ? "claim-input-error" : undefined}
+              className="w-full rounded-lg border border-zinc-300 bg-zinc-50 px-3.5 py-2.5 pr-9 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:bg-zinc-950"
+            />
+            {claim.length > 0 && !isLoading && (
+              <button
+                type="button"
+                onClick={() => {
+                  setClaim("");
+                  setError(null);
+                }}
+                aria-label="Clear claim"
+                title="Clear claim"
+                className="absolute right-2.5 top-2.5 rounded-md p-1 text-zinc-400 transition-colors hover:bg-zinc-200/70 hover:text-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
+              >
+                <X className="h-3.5 w-3.5" aria-hidden="true" />
+              </button>
+            )}
+          </div>
         ) : (
-          <input
-            id="claim-input"
-            type="url"
-            value={claim}
-            disabled={isLoading}
-            onChange={(e) => {
-              setClaim(e.target.value);
-              if (error) setError(null);
-            }}
-            placeholder="https://www.bollywoodhungama.com/news/..."
-            aria-invalid={error !== null}
-            aria-describedby={error ? "claim-input-error" : undefined}
-            className="w-full rounded-lg border border-zinc-300 bg-zinc-50 px-3.5 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:bg-zinc-950"
-          />
+          <div className="relative flex items-center">
+            <input
+              id="claim-input"
+              type="url"
+              value={claim}
+              disabled={isLoading}
+              onChange={(e) => {
+                setClaim(e.target.value);
+                if (error) setError(null);
+              }}
+              placeholder="https://www.bollywoodhungama.com/news/..."
+              aria-invalid={error !== null}
+              aria-describedby={error ? "claim-input-error" : undefined}
+              className="w-full rounded-lg border border-zinc-300 bg-zinc-50 px-3.5 py-2.5 pr-20 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:bg-zinc-950"
+            />
+            <div className="absolute right-2 flex items-center gap-1">
+              {claim.length > 0 && !isLoading ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setClaim("");
+                    setError(null);
+                  }}
+                  aria-label="Clear URL"
+                  title="Clear URL"
+                  className="rounded-md p-1 text-zinc-400 transition-colors hover:bg-zinc-200/70 hover:text-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
+                >
+                  <X className="h-3.5 w-3.5" aria-hidden="true" />
+                </button>
+              ) : (
+                !isLoading && (
+                  <button
+                    type="button"
+                    onClick={handlePaste}
+                    className="inline-flex items-center gap-1 rounded-md border border-zinc-200 bg-white px-2 py-1 text-[11px] font-medium text-zinc-600 transition-colors hover:border-amber-400 hover:text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+                  >
+                    <ClipboardPaste className="h-3 w-3" aria-hidden="true" />
+                    <span>Paste</span>
+                  </button>
+                )
+              )}
+            </div>
+          </div>
         )}
 
         {error && (
@@ -190,7 +270,10 @@ export default function ClaimInput({ onSubmit, isLoading }: ClaimInputProps) {
       </div>
 
       {/* Submit button */}
-      <div className="flex justify-end">
+      <div className="flex items-center justify-between gap-3">
+        <span className="hidden text-[11px] text-zinc-400 sm:inline dark:text-zinc-500">
+          {inputType === "text" ? "Press Ctrl/⌘ + Enter to submit" : ""}
+        </span>
         <button
           type="submit"
           disabled={isSubmitDisabled}

@@ -1,8 +1,16 @@
-import { Calendar, ExternalLink, Shield } from "lucide-react";
+import { Calendar, ExternalLink, Globe, Shield } from "lucide-react";
 import type { EvidenceItem, StanceLabel } from "@/types/api";
 
 interface EvidenceCardProps {
   item: EvidenceItem;
+}
+
+function getDomain(url: string): string | null {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return null;
+  }
 }
 
 const STANCE_CONFIG: Record<StanceLabel, { label: string; classes: string }> = {
@@ -28,9 +36,11 @@ export default function EvidenceCard({ item }: EvidenceCardProps) {
   const credibilityPercent = Math.round(
     Math.max(0, Math.min(1, item.credibility_score)) * 100,
   );
+  const filledBars = Math.max(1, Math.round((credibilityPercent / 100) * 4));
+  const domain = getDomain(item.url);
 
   return (
-    <article className="rounded-xl border border-zinc-200 bg-white p-4 shadow-xs transition-colors hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700 sm:p-5">
+    <article className="rounded-xl border border-zinc-200 bg-white p-4 shadow-xs transition-all hover:border-zinc-300 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700 sm:p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-2 text-xs">
           <span
@@ -41,15 +51,37 @@ export default function EvidenceCard({ item }: EvidenceCardProps) {
           <span className="font-semibold text-zinc-900 dark:text-zinc-100">
             {item.source_name}
           </span>
+          {domain && (
+            <span className="hidden items-center gap-1 rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-[11px] text-zinc-500 sm:inline-flex dark:bg-zinc-800/80 dark:text-zinc-400">
+              <Globe className="h-3 w-3" aria-hidden="true" />
+              <span>{domain}</span>
+            </span>
+          )}
           <span className="inline-flex items-center gap-1 text-zinc-500 dark:text-zinc-400">
             <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
             <span>{item.published_date ?? "Date unknown"}</span>
           </span>
         </div>
 
-        <span className="inline-flex items-center gap-1 rounded-md bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+        <span
+          className="inline-flex items-center gap-2 rounded-md bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+          title={`Source credibility score: ${credibilityPercent}%`}
+        >
           <Shield className="h-3 w-3 text-amber-500" aria-hidden="true" />
-          <span>Credibility: {credibilityPercent}%</span>
+          <span className="tabular-nums">Credibility: {credibilityPercent}%</span>
+          <span className="inline-flex items-end gap-0.5" aria-hidden="true">
+            {[1, 2, 3, 4].map((bar) => (
+              <span
+                key={bar}
+                className={`w-1 rounded-xs ${
+                  bar <= filledBars
+                    ? "bg-amber-500"
+                    : "bg-zinc-300 dark:bg-zinc-600"
+                }`}
+                style={{ height: `${bar * 2 + 4}px` }}
+              />
+            ))}
+          </span>
         </span>
       </div>
 

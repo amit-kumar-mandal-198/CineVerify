@@ -1,17 +1,46 @@
+"use client";
+
+import { motion } from "framer-motion";
+import type { VerdictLabel } from "@/types/api";
+
 interface ConfidenceMeterProps {
   confidence: number;
+  verdict?: VerdictLabel;
 }
 
-export default function ConfidenceMeter({ confidence }: ConfidenceMeterProps) {
+const VERDICT_METER_STYLES: Record<
+  VerdictLabel,
+  { bar: string; text: string; suffix: string }
+> = {
+  VERIFIED: {
+    bar: "bg-emerald-500",
+    text: "text-emerald-600 dark:text-emerald-400",
+    suffix: "True",
+  },
+  FALSE: {
+    bar: "bg-red-500",
+    text: "text-red-600 dark:text-red-400",
+    suffix: "False",
+  },
+  MISLEADING: {
+    bar: "bg-amber-500",
+    text: "text-amber-600 dark:text-amber-400",
+    suffix: "Misleading",
+  },
+  UNVERIFIED: {
+    bar: "bg-slate-400 dark:bg-slate-500",
+    text: "text-zinc-600 dark:text-zinc-300",
+    suffix: "Evidence",
+  },
+};
+
+export default function ConfidenceMeter({
+  confidence,
+  verdict = "UNVERIFIED",
+}: ConfidenceMeterProps) {
   const clamped = Math.max(0, Math.min(1, confidence));
   const percentage = Math.round(clamped * 100);
-
-  const barColor =
-    percentage >= 75
-      ? "bg-emerald-500"
-      : percentage >= 50
-        ? "bg-amber-500"
-        : "bg-slate-400 dark:bg-slate-500";
+  const style = VERDICT_METER_STYLES[verdict];
 
   return (
     <div className="space-y-1.5">
@@ -19,8 +48,8 @@ export default function ConfidenceMeter({ confidence }: ConfidenceMeterProps) {
         <span className="text-zinc-600 dark:text-zinc-400">
           Evidence Strength
         </span>
-        <span className="font-semibold tabular-nums text-zinc-900 dark:text-zinc-100">
-          {percentage}%
+        <span className={`font-semibold tabular-nums ${style.text}`}>
+          {percentage}% {style.suffix}
         </span>
       </div>
       <div
@@ -31,9 +60,11 @@ export default function ConfidenceMeter({ confidence }: ConfidenceMeterProps) {
         aria-valuemax={100}
         className="h-2.5 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800"
       >
-        <div
-          className={`h-full rounded-full transition-all duration-300 ${barColor}`}
-          style={{ width: `${percentage}%` }}
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${percentage}%` }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+          className={`h-full rounded-full ${style.bar}`}
         />
       </div>
     </div>

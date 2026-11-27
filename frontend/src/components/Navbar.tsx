@@ -2,19 +2,54 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { Film, Menu, Sparkles, X } from "lucide-react";
+import { useState, useSyncExternalStore } from "react";
+import { Film, Menu, Moon, Sparkles, Sun, X } from "lucide-react";
 
 const NAV_LINKS = [
+  { href: "/", label: "Home" },
+  { href: "/history", label: "History" },
+  { href: "/about", label: "About" },
+] as const;
+
+const MOBILE_LINKS = [
   { href: "/", label: "Home" },
   { href: "/verify", label: "Verify Claim" },
   { href: "/history", label: "History" },
   { href: "/about", label: "About" },
 ] as const;
 
+const subscribeTheme = (callback: () => void) => {
+  const observer = new MutationObserver(callback);
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class"],
+  });
+  return () => observer.disconnect();
+};
+
+const getThemeSnapshot = () =>
+  document.documentElement.classList.contains("dark");
+
+const getServerThemeSnapshot = () => null;
+
 export default function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const isDark = useSyncExternalStore<boolean | null>(
+    subscribeTheme,
+    getThemeSnapshot,
+    getServerThemeSnapshot,
+  );
+
+  function toggleTheme() {
+    const nextDark = !(isDark ?? true);
+    document.documentElement.classList.toggle("dark", nextDark);
+    try {
+      localStorage.setItem("cineverify-theme", nextDark ? "dark" : "light");
+    } catch {
+      // Ignore storage errors in restricted contexts
+    }
+  }
 
   return (
     <div className="sticky top-0 z-50 w-full px-3 py-3 sm:px-6 lg:px-8">
@@ -64,6 +99,22 @@ export default function Navbar() {
 
           {/* Right Action CTA & Mobile Toggle */}
           <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+              title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-zinc-200/80 bg-zinc-100/80 text-zinc-600 transition-colors hover:bg-zinc-200 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-amber-400"
+            >
+              {isDark === null ? (
+                <Sun className="h-3.5 w-3.5 opacity-0" aria-hidden="true" />
+              ) : isDark ? (
+                <Sun className="h-3.5 w-3.5" aria-hidden="true" />
+              ) : (
+                <Moon className="h-3.5 w-3.5" aria-hidden="true" />
+              )}
+            </button>
+
             <Link
               href="/verify"
               className="hidden items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 px-3.5 py-1.5 text-xs font-semibold text-zinc-950 shadow-sm shadow-amber-500/25 transition-all hover:brightness-110 sm:inline-flex"
@@ -92,7 +143,7 @@ export default function Navbar() {
         {/* Mobile dropdown menu */}
         {mobileOpen && (
           <div className="mt-2 space-y-1 rounded-xl border border-zinc-200/60 bg-zinc-50/90 p-2 backdrop-blur-md md:hidden dark:border-zinc-800/60 dark:bg-zinc-900/90">
-            {NAV_LINKS.map((link) => {
+            {MOBILE_LINKS.map((link) => {
               const isActive = pathname === link.href;
               return (
                 <Link

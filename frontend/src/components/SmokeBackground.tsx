@@ -40,9 +40,17 @@ export default function SmokeBackground() {
     const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
 
-    let animationFrameId: number;
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    let animationFrameId: number | null = null;
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    canvas.width = Math.floor(width * dpr);
+    canvas.height = Math.floor(height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     // Mouse tracking for realistic smoke interaction
     const mouse = {
@@ -72,8 +80,11 @@ export default function SmokeBackground() {
 
     const handleResize = () => {
       if (!canvas) return;
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
     window.addEventListener("resize", handleResize);
@@ -255,13 +266,31 @@ export default function SmokeBackground() {
       }
       ctx.restore();
 
-      animationFrameId = requestAnimationFrame(render);
+      if (!prefersReducedMotion && !document.hidden) {
+        animationFrameId = requestAnimationFrame(render);
+      }
     };
 
+    const handleVisibilityChange = () => {
+      if (prefersReducedMotion) return;
+      if (document.hidden) {
+        if (animationFrameId !== null) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+      } else if (animationFrameId === null) {
+        animationFrameId = requestAnimationFrame(render);
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
     animationFrameId = requestAnimationFrame(render);
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId);
+      }
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handleMouseMove);
     };
@@ -295,7 +324,7 @@ export default function SmokeBackground() {
       />
 
       {/* Cinematic theater vignette */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,rgba(0,0,0,0.55)_100%)] pointer-events-none" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_25%,rgba(0,0,0,0.18)_100%)] dark:bg-[radial-gradient(ellipse_at_center,transparent_20%,rgba(0,0,0,0.55)_100%)]" />
     </div>
   );
 }

@@ -8,7 +8,7 @@ interface SmokeGlowBeamProps {
 }
 
 export function SmokeGlowBeam({
-  particleColor = "#ffffff",
+  particleColor = "#f59e0b",
   className = "",
 }: SmokeGlowBeamProps) {
   return (
