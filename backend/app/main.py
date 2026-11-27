@@ -2,16 +2,29 @@
 
 from __future__ import annotations
 
+from contextlib import asynccontextmanager
+from typing import AsyncIterator
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
+from app.database.connection import close_database
 from app.routes import history, verify
+
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
+    """Manage startup and shutdown resources."""
+    yield
+    await close_database()
+
 
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
     description="AI-Powered Indian Cinema News & Rumour Verification API",
+    lifespan=lifespan,
 )
 
 app.add_middleware(

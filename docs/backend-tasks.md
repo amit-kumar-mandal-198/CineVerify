@@ -34,11 +34,11 @@
    # macOS / Linux:
    # source venv/bin/activate
 
-   pip install fastapi "uvicorn[standard]" pydantic python-dotenv httpx motor pymongo google-search-results trafilatura htmldate beautifulsoup4
+   pip install fastapi "uvicorn[standard]" pydantic python-dotenv httpx boto3 google-search-results trafilatura htmldate beautifulsoup4
    cp .env.example .env
    ```
    *(Note: If you later integrate the AI branch locally, Python `3.11` or `3.12` is recommended for PyTorch/Transformers wheel compatibility.)*
-3. Add your `SERPAPI_KEY` and `MONGODB_URI` to `backend/.env`.
+3. Add your `SERPAPI_KEY` and AWS DynamoDB settings (`AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `DYNAMODB_TABLE_NAME`) to `backend/.env`.
 4. Run the FastAPI server:
    ```bash
    uvicorn app.main:app --reload --port 8000
@@ -50,16 +50,16 @@
 
 ---
 
-## Step 2: Implement MongoDB Connection (`database/connection.py`)
+## Step 2: Implement AWS DynamoDB Connection (`database/connection.py`)
 
 ### What to build
 Edit **`backend/app/database/connection.py`**:
-1. Initialize `AsyncIOMotorClient(settings.MONGODB_URI)` lazily inside `get_database()` and return `client[settings.MONGODB_DB_NAME]`.
-2. Ensure `close_database()` cleanly closes `_client` and resets it to `None`.
-3. Wire FastAPI shutdown/lifespan in `backend/app/main.py` so `close_database()` is called on app exit.
+1. Initialize `boto3` DynamoDB client/resource using `settings.AWS_REGION` and optional IAM credentials (falling back to IAM role / `~/.aws/credentials` on EC2/Lambda).
+2. Add `ensure_table_exists_sync()` using **Provisioned Capacity** (`5 RCU / 5 WCU`) so it stays inside the **AWS Always Free** tier (`≤ 25 RCU / 25 WCU`, `25 GB` storage).
+3. Wire FastAPI shutdown/lifespan in `backend/app/main.py` so `close_database()` runs cleanly on exit.
 
 ### Verify before moving on
-- Run a quick Python snippet to ping MongoDB (`await get_database().command("ping")`) and confirm `{"ok": 1.0}`.
+- Run `await ping_database()` and confirm it returns `True` against your AWS DynamoDB table `cineverify_verifications`.
 
 ---
 
@@ -68,16 +68,14 @@ Edit **`backend/app/database/connection.py`**:
 ### What to build
 Edit **`backend/app/database/crud.py`**:
 1. **`save_verification(report: VerificationResponse) -> str`**
-   - Serialize with `report.model_dump(mode="json")`.
-   - Insert into the `verifications` collection.
+   - Convert Python `float` values to `Decimal` (required by DynamoDB) and call `put_item`.
    - Return `report.id`.
 2. **`get_history(limit: int = 20) -> List[HistoryItem]`**
-   - Query `verifications` sorted by `verified_at` descending (`-1`), limited to `limit`.
-   - Map each document into `HistoryItem`.
-3. Also add an optional helper `get_verification_by_id(report_id: str)` if needed later.
+   - Scan lightweight projection fields from DynamoDB, convert `Decimal` back to `float`, sort by `verified_at` descending, and slice `[:limit]`.
+3. Also add `get_verification_by_id(report_id: str)` via `get_item(Key={"id": report_id})`.
 
 ### Verify before moving on
-- Save a dummy `VerificationResponse` via `save_verification()`, call `get_history()`, and confirm it returns the saved `HistoryItem` from MongoDB.
+- Save a dummy `VerificationResponse` via `save_verification()`, call `get_history()`, and confirm it returns the saved `HistoryItem` from AWS DynamoDB.
 
 ---
 
