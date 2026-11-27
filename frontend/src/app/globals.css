@@ -24,3 +24,53 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes smoke-drift-1 {
+  0%,
+  100% {
+    transform: translate3d(-8%, -4%, 0) scale(1) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(10%, 7%, 0) scale(1.16) rotate(10deg);
+  }
+}
+
+@keyframes smoke-drift-2 {
+  0%,
+  100% {
+    transform: translate3d(7%, 6%, 0) scale(1.06) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(-9%, -7%, 0) scale(0.94) rotate(-12deg);
+  }
+}
+
+@keyframes smoke-drift-3 {
+  0%,
+  100% {
+    transform: translate3d(-4%, 8%, 0) scale(0.95) rotate(-4deg);
+  }
+  50% {
+    transform: translate3d(6%, -6%, 0) scale(1.14) rotate(6deg);
+  }
+}
+
+.animate-smoke-1 {
+  animation: smoke-drift-1 22s ease-in-out infinite;
+}
+
+.animate-smoke-2 {
+  animation: smoke-drift-2 28s ease-in-out infinite;
+}
+
+.animate-smoke-3 {
+  animation: smoke-drift-3 18s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-smoke-1,
+  .animate-smoke-2,
+  .animate-smoke-3 {
+    animation: none;
+  }
+}
