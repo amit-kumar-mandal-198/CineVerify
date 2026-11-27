@@ -25,8 +25,12 @@ class Settings:
 
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
     SERPAPI_KEY: str = os.getenv("SERPAPI_KEY", "")
-    MONGODB_URI: str = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
-    MONGODB_DB_NAME: str = os.getenv("MONGODB_DB_NAME", "cineverify")
+
+    # AWS DynamoDB (Always Free Tier)
+    AWS_REGION: str = os.getenv("AWS_REGION", "ap-south-1")
+    AWS_ACCESS_KEY_ID: str = os.getenv("AWS_ACCESS_KEY_ID", "")
+    AWS_SECRET_ACCESS_KEY: str = os.getenv("AWS_SECRET_ACCESS_KEY", "")
+    DYNAMODB_TABLE_NAME: str = os.getenv("DYNAMODB_TABLE_NAME", "cineverify_verifications")
 
 
 settings = Settings()
