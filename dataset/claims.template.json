@@ -1,0 +1,16 @@
+{
+  "$comment": "Template schema for a single dataset record in dataset/claims.json. Copy into an array and fill with manually verified real claims.",
+  "record_schema": {
+    "id": "claim-001",
+    "claim_text": "string — exact headline or claim text",
+    "category": "movie_announcement | casting | release_update | box_office",
+    "movie_or_celebrity": "string — primary entity",
+    "claim_date": "YYYY-MM-DD — date the claim was circulated",
+    "evidence_url": "https://... — verified primary/credible source URL",
+    "evidence_source": "string — publication or official handle name",
+    "evidence_date": "YYYY-MM-DD — publication date of evidence",
+    "evidence_stance": "supports | contradicts | neutral",
+    "ground_truth_verdict": "VERIFIED | FALSE | MISLEADING | UNVERIFIED",
+    "verification_notes": "string — why this ground truth label applies"
+  }
+}
