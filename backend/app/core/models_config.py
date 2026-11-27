@@ -3,11 +3,16 @@
 from __future__ import annotations
 
 from google import genai
+from google.genai import types
 
 from app.config import settings
 
-# LLM model for structured claim extraction & grounded explanation
-GEMINI_MODEL_NAME: str = "gemini-3.5-flash"
+# Fast, high-quota Flash-Lite model with fallback for structured extraction & explanation
+GEMINI_MODEL_NAME: str = "gemini-3.5-flash-lite"
+GEMINI_FALLBACK_MODELS: tuple[str, ...] = (
+    "gemini-3.5-flash-lite",
+    "gemini-3.1-flash-lite",
+)
 _PLACEHOLDER_GEMINI_KEY: str = "your_gemini_api_key_here"
 
 # Pretrained NLI cross-encoder for claim-evidence stance classification
@@ -30,6 +35,10 @@ def has_valid_gemini_key() -> bool:
 
 
 def create_gemini_client() -> genai.Client:
-    """Initialize a Google GenAI client using the configured GEMINI_API_KEY."""
-    return genai.Client(api_key=settings.GEMINI_API_KEY)
-
+    """Initialize a Google GenAI client without multi-second 429 retry stalls."""
+    return genai.Client(
+        api_key=settings.GEMINI_API_KEY,
+        http_options=types.HttpOptions(
+            retry_options=types.HttpRetryOptions(attempts=1),
+        ),
+    )

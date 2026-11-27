@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 from contextlib import asynccontextmanager
 from typing import AsyncIterator
 
@@ -11,11 +12,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.database.connection import close_database
 from app.routes import history, verify
+from app.services.nli_verifier import _get_nli_model
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
-    """Manage startup and shutdown resources."""
+    """Preload cached ML models at startup and close DB resources on shutdown."""
+    await asyncio.to_thread(_get_nli_model)
     yield
     await close_database()
 

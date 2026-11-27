@@ -11,6 +11,7 @@ import trafilatura
 from google.genai import types
 
 from app.core.models_config import (
+    GEMINI_FALLBACK_MODELS,
     GEMINI_MODEL_NAME,
     create_gemini_client,
     has_valid_gemini_key,
@@ -140,18 +141,26 @@ def extract_claim(raw_input: str, input_type: InputType = InputType.TEXT) -> Cla
     prompt = CLAIM_EXTRACTION_PROMPT.format(input_text=analysis_text)
     try:
         client = create_gemini_client()
-        response = client.models.generate_content(
-            model=GEMINI_MODEL_NAME,
-            contents=prompt,
-            config=types.GenerateContentConfig(
-                response_mime_type="application/json",
-                temperature=0.1,
-            ),
-        )
-        response_text = (response.text or "").strip()
-        if not response_text:
-            raise ValueError("Empty response returned by Gemini claim extractor.")
-        return _parse_gemini_response(response_text, raw_input, analysis_text)
+        last_exc: Optional[Exception] = None
+        for model_name in GEMINI_FALLBACK_MODELS:
+            try:
+                response = client.models.generate_content(
+                    model=model_name,
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        response_mime_type="application/json",
+                        temperature=0.1,
+                    ),
+                )
+                response_text = (response.text or "").strip()
+                if not response_text:
+                    raise ValueError(f"Empty response returned by {model_name}.")
+                return _parse_gemini_response(response_text, raw_input, analysis_text)
+            except Exception as model_exc:
+                last_exc = model_exc
+                logger.warning("Gemini extraction failed on %s (%s); trying next.", model_name, model_exc)
+        if last_exc is not None:
+            raise last_exc
     except Exception as exc:
         logger.warning("Gemini claim extraction failed (%s); using fallback.", exc)
         return _build_fallback_result(raw_input, analysis_text)

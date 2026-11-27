@@ -45,7 +45,7 @@ export default function ConfidenceMeter({
   return (
     <div className="space-y-1.5">
       <div className="flex items-center justify-between text-xs font-medium">
-        <span className="text-zinc-600 dark:text-zinc-400">
+        <span className="text-[var(--ink-500)]">
           Evidence Strength
         </span>
         <span className={`font-semibold tabular-nums ${style.text}`}>
@@ -58,7 +58,7 @@ export default function ConfidenceMeter({
         aria-valuenow={percentage}
         aria-valuemin={0}
         aria-valuemax={100}
-        className="h-2.5 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800"
+        className="h-2.5 w-full overflow-hidden rounded-full bg-[var(--surface-tint)]"
       >
         <motion.div
           initial={{ width: 0 }}

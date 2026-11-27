@@ -21,9 +21,9 @@ from app.schemas.evidence import EvidencePassage, SearchResult
 logger = logging.getLogger(__name__)
 
 CACHE_FILE = Path(__file__).resolve().parents[2] / ".cache" / "serpapi_cache.json"
-MAX_QUERIES = 3
-MAX_URLS_TO_FETCH = 6
-REQUEST_TIMEOUT_SECONDS = 8.0
+MAX_QUERIES = 2
+MAX_URLS_TO_FETCH = 4
+REQUEST_TIMEOUT_SECONDS = 4.5
 
 _CATEGORY_QUERY_BUILDERS = {
     ClaimCategory.MOVIE_ANNOUNCEMENT: lambda movie, person, house, platform: _join_terms(
@@ -231,8 +231,8 @@ def extract_article_from_html(
 
 def chunk_article_text(
     text: str,
-    max_words: int = 240,
-    max_chunks: int = 3,
+    max_words: int = 200,
+    max_chunks: int = 2,
 ) -> List[str]:
     """Split article body text into paragraph-aware passages capped for fast NLI."""
     paragraphs = [" ".join(p.split()) for p in text.splitlines() if p.strip()]

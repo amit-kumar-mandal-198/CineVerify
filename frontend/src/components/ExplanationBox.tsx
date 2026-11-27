@@ -24,16 +24,16 @@ export default function ExplanationBox({
   return (
     <section
       aria-label="AI Explanation"
-      className={`rounded-xl border p-4 sm:p-5 ${VERDICT_CARD_STYLES[verdict]}`}
+      className={`glass-card p-4 sm:p-5 ${VERDICT_CARD_STYLES[verdict]}`}
     >
-      <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-        <Sparkles className="h-4 w-4 text-amber-500" aria-hidden="true" />
+      <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-[var(--ink-900)]">
+        <Sparkles className="h-4 w-4 text-[var(--ink-900)]" aria-hidden="true" />
         <h2>Verification Explanation</h2>
       </div>
-      <p className="text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">
+      <p className="text-sm leading-relaxed text-[var(--ink-900)]">
         {explanation}
       </p>
-      <p className="mt-3 flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
+      <p className="mt-3 flex items-center gap-1.5 text-xs text-[var(--ink-500)]">
         <Info className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
         <span>
           This verdict is derived directly from the retrieved evidence sources listed below.

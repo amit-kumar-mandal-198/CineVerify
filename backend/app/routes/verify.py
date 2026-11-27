@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import logging
 from datetime import datetime, timezone
 from typing import Dict, List
@@ -83,12 +84,24 @@ async def verify_claim_endpoint(request: ClaimRequest) -> VerificationResponse:
         )
 
     try:
-        claim_result = claim_extractor.extract_claim(cleaned_claim, request.type)
+        claim_result = await asyncio.to_thread(
+            claim_extractor.extract_claim,
+            cleaned_claim,
+            request.type,
+        )
         passages = await evidence_retriever.retrieve_evidence(claim_result)
-        nli_results = nli_verifier.verify_claim(claim_result.core_claim, passages)
+        nli_results = await asyncio.to_thread(
+            nli_verifier.verify_claim,
+            claim_result.core_claim,
+            passages,
+        )
         verdict = verdict_engine.generate_verdict(claim_result, nli_results, passages)
-        explanation = explanation_gen.generate_explanation(
-            claim_result, verdict, passages, nli_results
+        explanation = await asyncio.to_thread(
+            explanation_gen.generate_explanation,
+            claim_result,
+            verdict,
+            passages,
+            nli_results,
         )
     except ValueError as exc:
         raise HTTPException(

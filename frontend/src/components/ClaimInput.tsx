@@ -17,6 +17,7 @@ export interface ClaimInputProps {
   isLoading: boolean;
   initialClaim?: string;
   initialType?: InputType;
+  autoFocus?: boolean;
 }
 
 const EXAMPLE_CLAIMS: ReadonlyArray<{ label: string; claim: string; type: InputType }> = [
@@ -51,6 +52,7 @@ export default function ClaimInput({
   isLoading,
   initialClaim = "",
   initialType = "text",
+  autoFocus = false,
 }: ClaimInputProps) {
   const [inputType, setInputType] = useState<InputType>(initialType);
   const [claim, setClaim] = useState(initialClaim);
@@ -110,24 +112,24 @@ export default function ClaimInput({
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="space-y-4 rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 sm:p-6"
+      className="glass-card space-y-4 p-5 sm:p-6"
     >
       {/* Input mode toggle */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div
           role="group"
           aria-label="Claim input type"
-          className="inline-flex rounded-lg border border-zinc-200 bg-zinc-100 p-1 dark:border-zinc-700 dark:bg-zinc-800"
+          className="inline-flex rounded-xl border border-[var(--border)] bg-[var(--surface-tint)]/75 p-1"
         >
           <button
             type="button"
             disabled={isLoading}
             aria-pressed={inputType === "text"}
             onClick={() => handleTypeChange("text")}
-            className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors disabled:opacity-60 ${
+            className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors disabled:opacity-60 ${
               inputType === "text"
-                ? "bg-white text-zinc-900 shadow-xs dark:bg-zinc-950 dark:text-zinc-50"
-                : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                ? "bg-white text-[var(--ink-900)] shadow-xs"
+                : "text-[var(--ink-500)] hover:text-[var(--ink-900)]"
             }`}
           >
             <FileText className="h-4 w-4" aria-hidden="true" />
@@ -139,10 +141,10 @@ export default function ClaimInput({
             disabled={isLoading}
             aria-pressed={inputType === "url"}
             onClick={() => handleTypeChange("url")}
-            className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors disabled:opacity-60 ${
+            className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors disabled:opacity-60 ${
               inputType === "url"
-                ? "bg-white text-zinc-900 shadow-xs dark:bg-zinc-950 dark:text-zinc-50"
-                : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                ? "bg-white text-[var(--ink-900)] shadow-xs"
+                : "text-[var(--ink-500)] hover:text-[var(--ink-900)]"
             }`}
           >
             <Link2 className="h-4 w-4" aria-hidden="true" />
@@ -150,7 +152,7 @@ export default function ClaimInput({
           </button>
         </div>
 
-        <span className="text-xs text-zinc-500 dark:text-zinc-400">
+        <span className="text-xs text-[var(--ink-500)]">
           {inputType === "text" ? "Paste a rumour, tweet, or headline" : "Paste an entertainment news link"}
         </span>
       </div>
@@ -166,6 +168,7 @@ export default function ClaimInput({
             <textarea
               id="claim-input"
               rows={4}
+              autoFocus={autoFocus}
               value={claim}
               disabled={isLoading}
               onKeyDown={handleKeyDown}
@@ -176,7 +179,7 @@ export default function ClaimInput({
               placeholder="e.g. Pushpa 3 releasing on Christmas 2027"
               aria-invalid={error !== null}
               aria-describedby={error ? "claim-input-error" : undefined}
-              className="w-full rounded-lg border border-zinc-300 bg-zinc-50 px-3.5 py-2.5 pr-9 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:bg-zinc-950"
+              className="w-full rounded-xl border border-[var(--border)] bg-white/75 px-3.5 py-2.5 pr-9 text-sm text-[var(--ink-900)] placeholder:text-[var(--ink-500)] focus:border-[var(--border-strong)] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--lime-500)]/50 disabled:cursor-not-allowed disabled:opacity-60"
             />
             {claim.length > 0 && !isLoading && (
               <button
@@ -187,7 +190,7 @@ export default function ClaimInput({
                 }}
                 aria-label="Clear claim"
                 title="Clear claim"
-                className="absolute right-2.5 top-2.5 rounded-md p-1 text-zinc-400 transition-colors hover:bg-zinc-200/70 hover:text-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
+                className="absolute right-2.5 top-2.5 rounded-md p-1 text-[var(--ink-500)] transition-colors hover:bg-[var(--surface-tint)] hover:text-[var(--ink-900)]"
               >
                 <X className="h-3.5 w-3.5" aria-hidden="true" />
               </button>
@@ -198,6 +201,7 @@ export default function ClaimInput({
             <input
               id="claim-input"
               type="url"
+              autoFocus={autoFocus}
               value={claim}
               disabled={isLoading}
               onChange={(e) => {
@@ -207,7 +211,7 @@ export default function ClaimInput({
               placeholder="https://www.bollywoodhungama.com/news/..."
               aria-invalid={error !== null}
               aria-describedby={error ? "claim-input-error" : undefined}
-              className="w-full rounded-lg border border-zinc-300 bg-zinc-50 px-3.5 py-2.5 pr-20 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:bg-zinc-950"
+              className="w-full rounded-xl border border-[var(--border)] bg-white/75 px-3.5 py-2.5 pr-20 text-sm text-[var(--ink-900)] placeholder:text-[var(--ink-500)] focus:border-[var(--border-strong)] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--lime-500)]/50 disabled:cursor-not-allowed disabled:opacity-60"
             />
             <div className="absolute right-2 flex items-center gap-1">
               {claim.length > 0 && !isLoading ? (
@@ -219,7 +223,7 @@ export default function ClaimInput({
                   }}
                   aria-label="Clear URL"
                   title="Clear URL"
-                  className="rounded-md p-1 text-zinc-400 transition-colors hover:bg-zinc-200/70 hover:text-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
+                  className="rounded-md p-1 text-[var(--ink-500)] transition-colors hover:bg-[var(--surface-tint)] hover:text-[var(--ink-900)]"
                 >
                   <X className="h-3.5 w-3.5" aria-hidden="true" />
                 </button>
@@ -228,7 +232,7 @@ export default function ClaimInput({
                   <button
                     type="button"
                     onClick={handlePaste}
-                    className="inline-flex items-center gap-1 rounded-md border border-zinc-200 bg-white px-2 py-1 text-[11px] font-medium text-zinc-600 transition-colors hover:border-amber-400 hover:text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+                    className="inline-flex items-center gap-1 rounded-md border border-[var(--border)] bg-white px-2 py-1 text-[11px] font-medium text-[var(--ink-900)] transition-colors hover:border-[var(--border-strong)]"
                   >
                     <ClipboardPaste className="h-3 w-3" aria-hidden="true" />
                     <span>Paste</span>
@@ -243,7 +247,7 @@ export default function ClaimInput({
           <p
             id="claim-input-error"
             role="alert"
-            className="mt-2 flex items-center gap-1.5 text-xs font-medium text-red-600 dark:text-red-400"
+            className="mt-2 flex items-center gap-1.5 text-xs font-medium text-red-600"
           >
             <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
             <span>{error}</span>
@@ -253,7 +257,7 @@ export default function ClaimInput({
 
       {/* Quick-try example chips */}
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+        <span className="text-xs font-medium text-[var(--ink-500)]">
           Try example:
         </span>
         {EXAMPLE_CLAIMS.map((example) => (
@@ -262,7 +266,7 @@ export default function ClaimInput({
             type="button"
             disabled={isLoading}
             onClick={() => handleExampleClick(example)}
-            className="rounded-full border border-zinc-200 bg-zinc-50 px-2.5 py-1 text-xs text-zinc-700 transition-colors hover:border-amber-400 hover:bg-amber-50 hover:text-zinc-900 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:border-amber-500 dark:hover:bg-zinc-700"
+            className="rounded-full border border-[var(--border)] bg-white/65 px-2.5 py-1 text-xs text-[var(--ink-900)] transition-colors hover:border-[var(--border-strong)] hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
           >
             {example.label}
           </button>
@@ -271,13 +275,13 @@ export default function ClaimInput({
 
       {/* Submit button */}
       <div className="flex items-center justify-between gap-3">
-        <span className="hidden text-[11px] text-zinc-400 sm:inline dark:text-zinc-500">
+        <span className="hidden text-[11px] text-[var(--ink-500)] sm:inline">
           {inputType === "text" ? "Press Ctrl/⌘ + Enter to submit" : ""}
         </span>
         <button
           type="submit"
           disabled={isSubmitDisabled}
-          className="inline-flex items-center gap-2 rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-amber-500 dark:text-zinc-950 dark:hover:bg-amber-400"
+          className="cta-lime inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isLoading ? (
             <>

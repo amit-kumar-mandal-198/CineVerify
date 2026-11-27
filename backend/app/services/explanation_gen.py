@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import logging
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from google.genai import types
 
 from app.core.models_config import (
+    GEMINI_FALLBACK_MODELS,
     GEMINI_MODEL_NAME,
     create_gemini_client,
     has_valid_gemini_key,
@@ -118,15 +119,23 @@ def generate_explanation(
     )
     try:
         client = create_gemini_client()
-        response = client.models.generate_content(
-            model=GEMINI_MODEL_NAME,
-            contents=prompt,
-            config=types.GenerateContentConfig(temperature=0.2),
-        )
-        explanation = (response.text or "").strip()
-        if not explanation:
-            raise ValueError("Empty explanation returned by Gemini.")
-        return explanation
+        last_exc: Optional[Exception] = None
+        for model_name in GEMINI_FALLBACK_MODELS:
+            try:
+                response = client.models.generate_content(
+                    model=model_name,
+                    contents=prompt,
+                    config=types.GenerateContentConfig(temperature=0.2),
+                )
+                explanation = (response.text or "").strip()
+                if not explanation:
+                    raise ValueError(f"Empty explanation returned by {model_name}.")
+                return explanation
+            except Exception as model_exc:
+                last_exc = model_exc
+                logger.warning("Gemini explanation failed on %s (%s); trying next.", model_name, model_exc)
+        if last_exc is not None:
+            raise last_exc
     except Exception as exc:
         logger.warning("Gemini explanation generation failed (%s); using fallback.", exc)
         return _build_fallback_explanation(claim_result, verdict, top_items)

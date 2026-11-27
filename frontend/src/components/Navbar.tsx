@@ -2,168 +2,39 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useSyncExternalStore } from "react";
-import { Film, Menu, Moon, Sparkles, Sun, X } from "lucide-react";
 
 const NAV_LINKS = [
-  { href: "/", label: "Home" },
-  { href: "/history", label: "History" },
   { href: "/about", label: "About" },
+  { href: "/help", label: "Help" },
 ] as const;
-
-const MOBILE_LINKS = [
-  { href: "/", label: "Home" },
-  { href: "/verify", label: "Verify Claim" },
-  { href: "/history", label: "History" },
-  { href: "/about", label: "About" },
-] as const;
-
-const subscribeTheme = (callback: () => void) => {
-  const observer = new MutationObserver(callback);
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ["class"],
-  });
-  return () => observer.disconnect();
-};
-
-const getThemeSnapshot = () =>
-  document.documentElement.classList.contains("dark");
-
-const getServerThemeSnapshot = () => null;
 
 export default function Navbar() {
   const pathname = usePathname();
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const isDark = useSyncExternalStore<boolean | null>(
-    subscribeTheme,
-    getThemeSnapshot,
-    getServerThemeSnapshot,
-  );
-
-  function toggleTheme() {
-    const nextDark = !(isDark ?? true);
-    document.documentElement.classList.toggle("dark", nextDark);
-    try {
-      localStorage.setItem("cineverify-theme", nextDark ? "dark" : "light");
-    } catch {
-      // Ignore storage errors in restricted contexts
-    }
-  }
 
   return (
-    <div className="sticky top-0 z-50 w-full px-3 py-3 sm:px-6 lg:px-8">
-      <header className="w-full rounded-2xl border border-zinc-200/80 bg-white/75 p-2 shadow-lg shadow-zinc-950/5 backdrop-blur-xl transition-all dark:border-zinc-800/80 dark:bg-zinc-950/70 dark:shadow-black/30">
-        <nav
-          aria-label="Primary navigation"
-          className="flex items-center justify-between px-3 sm:px-6"
-        >
-          {/* Modern Brand Logo */}
-          <Link
-            href="/"
-            className="group flex items-center gap-2.5 transition-transform hover:scale-[1.02]"
-          >
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 text-zinc-950 shadow-md shadow-amber-500/20">
-              <Film className="h-4 w-4" aria-hidden="true" />
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="font-bold tracking-tight text-zinc-900 transition-colors group-hover:text-amber-500 dark:text-zinc-50">
-                CineVerify
-              </span>
-              <span className="rounded-md border border-amber-500/30 bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
-                AI
-              </span>
-            </div>
-          </Link>
-
-          {/* Desktop Floating Pill Navigation */}
-          <div className="hidden items-center gap-1 rounded-full border border-zinc-200/60 bg-zinc-100/60 p-1 md:flex dark:border-zinc-800/60 dark:bg-zinc-900/60">
-            {NAV_LINKS.map((link) => {
-              const isActive = pathname === link.href;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  aria-current={isActive ? "page" : undefined}
-                  className={`relative rounded-full px-4 py-1.5 text-xs font-semibold transition-all duration-200 ${
-                    isActive
-                      ? "bg-white text-zinc-950 shadow-xs dark:bg-zinc-800 dark:text-zinc-50"
-                      : "text-zinc-600 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-100"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
-          </div>
-
-          {/* Right Action CTA & Mobile Toggle */}
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={toggleTheme}
-              aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-              title={isDark ? "Switch to light mode" : "Switch to dark mode"}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-zinc-200/80 bg-zinc-100/80 text-zinc-600 transition-colors hover:bg-zinc-200 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-amber-400"
-            >
-              {isDark === null ? (
-                <Sun className="h-3.5 w-3.5 opacity-0" aria-hidden="true" />
-              ) : isDark ? (
-                <Sun className="h-3.5 w-3.5" aria-hidden="true" />
-              ) : (
-                <Moon className="h-3.5 w-3.5" aria-hidden="true" />
-              )}
-            </button>
-
+    <header className="pointer-events-none sticky top-2.5 z-50 flex w-full justify-end pl-5 pr-8 pt-2 sm:pl-8 sm:pr-12">
+      <nav
+        aria-label="Primary navigation"
+        className="pointer-events-auto inline-flex items-center gap-8 rounded-2xl border border-white/60 bg-white/25 px-6 py-2.5 shadow-[0_8px_24px_-8px_rgba(15,15,26,0.12)] backdrop-blur-md"
+      >
+        {NAV_LINKS.map((link) => {
+          const isActive = pathname === link.href;
+          return (
             <Link
-              href="/verify"
-              className="hidden items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 px-3.5 py-1.5 text-xs font-semibold text-zinc-950 shadow-sm shadow-amber-500/25 transition-all hover:brightness-110 sm:inline-flex"
+              key={link.href}
+              href={link.href}
+              aria-current={isActive ? "page" : undefined}
+              className={`text-sm font-medium tracking-tight transition-opacity ${
+                isActive
+                  ? "text-[var(--ink-900)] underline decoration-[var(--lime)] decoration-2 underline-offset-4"
+                  : "text-[var(--ink-900)] hover:opacity-75"
+              }`}
             >
-              <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>Verify Claim</span>
+              {link.label}
             </Link>
-
-            {/* Mobile menu toggle */}
-            <button
-              type="button"
-              onClick={() => setMobileOpen((prev) => !prev)}
-              className="rounded-xl border border-zinc-200/80 bg-zinc-100/80 p-2 text-zinc-600 transition-colors hover:bg-zinc-200 md:hidden dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
-              aria-expanded={mobileOpen}
-              aria-label="Toggle navigation menu"
-            >
-              {mobileOpen ? (
-                <X className="h-4 w-4" aria-hidden="true" />
-              ) : (
-                <Menu className="h-4 w-4" aria-hidden="true" />
-              )}
-            </button>
-          </div>
-        </nav>
-
-        {/* Mobile dropdown menu */}
-        {mobileOpen && (
-          <div className="mt-2 space-y-1 rounded-xl border border-zinc-200/60 bg-zinc-50/90 p-2 backdrop-blur-md md:hidden dark:border-zinc-800/60 dark:bg-zinc-900/90">
-            {MOBILE_LINKS.map((link) => {
-              const isActive = pathname === link.href;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  aria-current={isActive ? "page" : undefined}
-                  className={`block rounded-lg px-3 py-2 text-xs font-semibold transition-colors ${
-                    isActive
-                      ? "bg-amber-500 text-zinc-950"
-                      : "text-zinc-700 hover:bg-zinc-200/60 dark:text-zinc-300 dark:hover:bg-zinc-800"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
-          </div>
-        )}
-      </header>
-    </div>
+          );
+        })}
+      </nav>
+    </header>
   );
 }

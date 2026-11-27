@@ -3,8 +3,43 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Clean neutral backdrop */
+  --bg-primary: #FAFAFE;
+  --bg-secondary: #F4F3FA;
+  --bg-subtle: #EEEDF8;
+
+  /* Surfaces & Cards */
+  --surface: #FFFFFF;
+  --surface-hover: #FAFAFE;
+  --surface-muted: #F7F6FC;
+  --border: #E8E7F0;
+  --border-strong: #D4D3E3;
+
+  /* Ink — high contrast, no transparency */
+  --ink-900: #0F0F1A;
+  --ink-700: #2D2D3F;
+  --ink-500: #52526B;
+  --ink-400: #7A7A94;
+  --ink-300: #A0A0B4;
+
+  /* Accent */
+  --lime: #C7F24B;
+  --lime-hover: #B6E33A;
+  --lime-muted: #E8FBBA;
+
+  /* Radii */
+  --r-lg: 24px;
+  --r-md: 16px;
+  --r-sm: 12px;
+  --r-full: 9999px;
+
+  /* Backward-compatible aliases (used by sub-page components) */
+  --lime-500: var(--lime);
+  --lime-600: var(--lime-hover);
+  --surface-tint: var(--surface-muted);
+
+  --background: var(--bg-primary);
+  --foreground: var(--ink-900);
 }
 
 @theme inline {
@@ -12,17 +47,65 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-.dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --font-serif: var(--font-editorial-serif);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  color: var(--ink-900);
+  -webkit-font-smoothing: antialiased;
+  background: var(--bg-primary);
+  min-height: 100vh;
   font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+}
+
+/* Subtle surface card */
+.surface-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+}
+
+/* Crisp architectural dot overlay — transparent so full-page smoke shines through */
+.dot-canvas {
+  background-color: transparent;
+  background-image: radial-gradient(circle, rgba(148, 163, 184, 0.28) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Lime CTA */
+.cta-lime {
+  background-color: var(--lime);
+  color: var(--ink-900);
+  transition: background-color 150ms ease, transform 150ms ease;
+}
+
+.cta-lime:hover:not(:disabled) {
+  background-color: var(--lime-hover);
+}
+
+/* Glass card — keep for non-landing pages */
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--r-lg);
+  box-shadow: 0 1px 2px rgba(40, 40, 90, 0.04), 0 6px 20px -10px rgba(60, 60, 140, 0.1);
+}
+
+/* Keep frame/canvas for sub-pages that still use them */
+.frame {
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 36px;
+  box-shadow: 0 40px 80px -30px rgba(64, 64, 150, 0.35);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.canvas {
+  border-radius: 28px;
+  background: linear-gradient(180deg, #D8D7F7 0%, #EDEDFB 28%, #FAFAFE 60%);
 }
 
 @keyframes smoke-drift-1 {

@@ -43,7 +43,9 @@ export async function getHistory(limit = 20): Promise<HistoryItem[]> {
     return MOCK_HISTORY.slice(0, limit);
   }
 
-  const response = await fetch(`${API_BASE}/api/history?limit=${limit}`);
+  const response = await fetch(`${API_BASE}/api/history?limit=${limit}`, {
+    cache: "no-store",
+  });
   if (!response.ok) {
     throw new Error(`Failed to fetch verification history (${response.status})`);
   }

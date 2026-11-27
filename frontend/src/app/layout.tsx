@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import Footer from "@/components/Footer";
-import Navbar from "@/components/Navbar";
-import SmokeBackground from "@/components/SmokeBackground";
+import { Geist, Geist_Mono, Newsreader } from "next/font/google";
+import AppShell from "@/components/AppShell";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,6 +13,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const editorialSerif = Newsreader({
+  variable: "--font-editorial-serif",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+});
+
 export const metadata: Metadata = {
   title: "CineVerify AI — Indian Cinema News Verification",
   description:
@@ -25,21 +29,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${editorialSerif.variable} h-full antialiased`}
     >
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('cineverify-theme');var d=t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.classList.toggle('dark',d);}catch(e){}})();`,
-          }}
-        />
-      </head>
-      <body className="relative min-h-full flex flex-col">
-        <SmokeBackground />
-        <Navbar />
-        <div className="flex-1">{children}</div>
-        <Footer />
+      <body className="min-h-screen">
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );
