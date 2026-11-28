@@ -166,9 +166,9 @@ async def verify_claim_endpoint(request: ClaimRequest) -> VerificationResponse:
             prefetched_results=prefetched,
             prefetched_query=cleaned_claim if request.type == InputType.TEXT else None,
         )
-        nli_results = await asyncio.to_thread(
-            nli_verifier.verify_claim,
-            claim_result.core_claim,
+        nli_results, _slm_verdict, _slm_conf = await asyncio.to_thread(
+            nli_verifier.verify_claim_unified,
+            claim_result,
             passages,
         )
         verdict = verdict_engine.generate_verdict(claim_result, nli_results, passages)
@@ -294,9 +294,9 @@ async def verify_claim_stream_endpoint(request: ClaimRequest) -> StreamingRespon
             })
 
             yield _sse_event({"stage": "nli_comparison", "status": "running", "step": 2})
-            nli_results = await asyncio.to_thread(
-                nli_verifier.verify_claim,
-                claim_result.core_claim,
+            nli_results, _slm_verdict, _slm_conf = await asyncio.to_thread(
+                nli_verifier.verify_claim_unified,
+                claim_result,
                 passages,
             )
             verdict = verdict_engine.generate_verdict(claim_result, nli_results, passages)

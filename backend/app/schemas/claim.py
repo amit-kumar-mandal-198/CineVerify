@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import Optional
+from typing import Any, Dict, Optional
 
 from pydantic import BaseModel, Field
 
@@ -39,3 +39,4 @@ class ClaimResult(BaseModel):
     core_claim: str
     category: ClaimCategory
     entities: ExtractedEntities = Field(default_factory=ExtractedEntities)
+    slm_data: Optional[Dict[str, Any]] = None

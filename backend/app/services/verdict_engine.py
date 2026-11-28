@@ -119,7 +119,16 @@ def generate_verdict(
     nli_results: List[NLIResult],
     passages: List[EvidencePassage],
 ) -> VerdictOutput:
-    """Aggregate NLI stances, source credibility, temporal checks, and cross-source agreement."""
+    """Aggregate unified SLM verdict when available, or NLI stances + credibility + temporal rules."""
+    grounded = (claim_result.slm_data or {}).get("grounded_verification")
+    if isinstance(grounded, dict) and grounded.get("api_verdict"):
+        try:
+            verdict_enum = VerdictLabel(grounded["api_verdict"])
+            conf = _clamp_confidence(float(grounded.get("confidence", 0.5)), low=0.1, high=0.98)
+            return VerdictOutput(verdict=verdict_enum, confidence=conf)
+        except (ValueError, TypeError):
+            pass
+
     if not passages or not nli_results:
         return VerdictOutput(verdict=VerdictLabel.UNVERIFIED, confidence=0.2)
 

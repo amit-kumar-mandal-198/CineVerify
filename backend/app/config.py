@@ -38,22 +38,42 @@ settings = Settings()
 # Initial domain credibility map for Indian cinema & entertainment reporting.
 # Owned and refined jointly by Member 1 & Member 2.
 SOURCE_CREDIBILITY: dict[str, float] = {
-    # Tier 1: Established film trade & dedicated cinema publications
+    # Tier 1: Established film trade, wire agencies & dedicated cinema publications
     "filmcompanion.in": 0.95,
-    "bollywoodhungama.com": 0.90,
-    "sacnilk.com": 0.90,
+    "bollywoodhungama.com": 0.92,
+    "sacnilk.com": 0.92,
     "ormaxmedia.com": 0.92,
+    "ptinews.com": 0.92,
+    "variety.com": 0.92,
+    "hollywoodreporter.com": 0.90,
+    "hollywoodreporterindia.com": 0.90,
     # Tier 2: Mainstream national entertainment desks
     "hindustantimes.com": 0.85,
     "ndtv.com": 0.85,
     "indianexpress.com": 0.85,
-    "thehindu.com": 0.85,
-    "timesofindia.indiatimes.com": 0.78,
-    "pinkvilla.com": 0.72,
+    "thehindu.com": 0.88,
+    "indiatoday.in": 0.85,
+    "livemint.com": 0.84,
+    "theweek.in": 0.82,
+    "deccanchronicle.com": 0.80,
+    "thesouthfirst.com": 0.78,
+    "timesofindia.indiatimes.com": 0.82,
+    "indiatimes.com": 0.78,
+    "news18.com": 0.78,
+    "pinkvilla.com": 0.76,
+    "indiatvnews.com": 0.74,
+    "timesnownews.com": 0.72,
+    "economictimes.indiatimes.com": 0.84,
+    "mid-day.com": 0.78,
     # Tier 3: Mixed / aggregator portals
-    "koimoi.com": 0.62,
-    "zeenews.india.com": 0.55,
-    "dnaindia.com": 0.55,
+    "koimoi.com": 0.65,
+    "filmibeat.com": 0.62,
+    "mensxp.com": 0.60,
+    "msn.com": 0.65,
+    "zeenews.india.com": 0.58,
+    "dnaindia.com": 0.58,
+    "thedailyjagran.com": 0.62,
+    "movietalkies.com": 0.62,
 }
 
 DEFAULT_SOURCE_CREDIBILITY: float = 0.40

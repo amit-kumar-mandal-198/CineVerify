@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CineVerify AI — Fact-Checking & Verification Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --accent: #f59e0b;
+      --accent-hover: #d97706;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --success: #10b981;
+      --danger: #ef4444;
+      --border: #334155;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding: 2rem 1rem; display: flex; justify-content: center; }
+    .container { max-width: 800px; width: 100%; }
+    .header { text-align: center; margin-bottom: 2rem; }
+    .header h1 { font-size: 2.2rem; color: #fff; margin-bottom: 0.5rem; }
+    .header p { color: var(--muted); font-size: 1rem; }
+    .badge-bar { display: flex; gap: 0.5rem; justify-content: center; margin-top: 0.8rem; }
+    .badge { background: #334155; color: #fbbf24; font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 9999px; font-weight: 600; }
+    
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); }
+    .input-group { display: flex; flex-direction: column; gap: 0.75rem; }
+    textarea { width: 100%; height: 90px; background: #0f172a; border: 1px solid var(--border); border-radius: 8px; color: #fff; padding: 0.75rem; font-size: 1rem; resize: vertical; }
+    textarea:focus { outline: none; border-color: var(--accent); }
+    .btn { background: var(--accent); color: #000; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; align-self: flex-end; }
+    .btn:hover { background: var(--accent-hover); }
+    .samples { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+    .sample-btn { background: #1e293b; border: 1px solid var(--border); color: var(--muted); padding: 0.3rem 0.6rem; border-radius: 6px; font-size: 0.8rem; cursor: pointer; }
+    .sample-btn:hover { color: #fff; border-color: var(--accent); }
+
+    .result { display: none; }
+    .verdict-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1rem; }
+    .verdict-tag { font-size: 1.1rem; font-weight: 800; padding: 0.4rem 0.8rem; border-radius: 6px; }
+    .tag-CONFIRMED_OFFICIAL { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #10b981; }
+    .tag-HIGHLY_PLAUSIBLE { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid #f59e0b; }
+    .tag-UNVERIFIED_RUMOUR { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #ef4444; }
+    .tag-DEBUNKED_FAKE { background: rgba(220, 38, 38, 0.3); color: #fca5a5; border: 1px solid #b91c1c; }
+    
+    .section-title { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 0.4rem; font-weight: 700; }
+    .claim-box { background: #0f172a; padding: 0.75rem; border-radius: 6px; margin-bottom: 1rem; border-left: 3px solid var(--accent); }
+    .calc-box { background: #0b1329; border: 1px solid #1e3a8a; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
+    .calc-formula { font-family: monospace; color: #60a5fa; font-size: 0.95rem; margin-top: 0.3rem; }
+    .desc-box { background: #14213d; padding: 1rem; border-radius: 8px; line-height: 1.6; font-size: 0.95rem; color: #e2e8f0; border-left: 3px solid #3b82f6; }
+    
+    .entity-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+    .entity-pill { background: #334155; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.85rem; }
+    .loader { display: none; text-align: center; color: var(--accent); font-weight: 600; margin: 1rem 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎬 CineVerify AI</h1>
+      <p>Domain-Specialized SLM for Indian Cinema Fact-Checking & Mathematical Verification</p>
+      <div class="badge-bar">
+        <span class="badge">Model: CineVerify-Core-3B</span>
+        <span class="badge">Hardware: Local GPU (Ollama)</span>
+        <span class="badge">Cost: ₹0.00 / $0.00</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="input-group">
+        <label for="headline" class="section-title">Enter Entertainment Headline, Rumor, or Social Media Post:</label>
+        <textarea id="headline" placeholder="e.g. Deepika Padukone joins Spirit opposite Prabhas..."></textarea>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div class="samples">
+            <button class="sample-btn" onclick="setQuery('Deepika Padukone joins Spirit opposite Prabhas')">Sample 1: Casting</button>
+            <button class="sample-btn" onclick="setQuery('Pushpa 2: The Rule locks worldwide release on December 5, 2024')">Sample 2: Release Date</button>
+            <button class="sample-btn" onclick="setQuery('Kalki 2898 AD crosses ₹1000 Crore milestone at worldwide box office')">Sample 3: Box Office</button>
+          </div>
+          <button class="btn" id="verifyBtn" onclick="runVerification()">Verify Claim ⚡</button>
+        </div>
+      </div>
+      <div class="loader" id="loader">⚙️ Running neural fact-check & calculating credibility weights...</div>
+    </div>
+
+    <div class="card result" id="resultCard">
+      <div class="verdict-header">
+        <div>
+          <div class="section-title">Verification Verdict</div>
+          <div id="verdictText" class="verdict-tag">CONFIRMED</div>
+        </div>
+        <div style="text-align: right;">
+          <div class="section-title">Credibility Score</div>
+          <div id="scoreText" style="font-size: 1.5rem; font-weight: 800; color: #fbbf24;">85%</div>
+        </div>
+      </div>
+
+      <div class="section-title">Core Factual Assertion</div>
+      <div class="claim-box" id="coreClaim"></div>
+
+      <div class="section-title">Extracted Entities & Normalization</div>
+      <div class="entity-tags" id="entityList"></div>
+
+      <div style="margin-top: 1rem;">
+        <div class="section-title">Mathematical Verification Formula & Proof</div>
+        <div class="calc-box">
+          <div style="font-size: 0.8rem; color: #94a3b8;" id="calcReason"></div>
+          <div class="calc-formula" id="calcFormula"></div>
+          <div class="calc-formula" style="color: #34d399; margin-top: 0.2rem;" id="calcStep"></div>
+        </div>
+      </div>
+
+      <div style="margin-top: 1rem;">
+        <div class="section-title">Descriptive Analysis</div>
+        <div class="desc-box" id="descAnswer"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function setQuery(text) {
+      document.getElementById('headline').value = text;
+    }
+
+    async function runVerification() {
+      const text = document.getElementById('headline').value.trim();
+      if (!text) return alert("Please enter a headline first!");
+
+      const loader = document.getElementById('loader');
+      const resultCard = document.getElementById('resultCard');
+      const btn = document.getElementById('verifyBtn');
+
+      loader.style.display = 'block';
+      resultCard.style.display = 'none';
+      btn.disabled = true;
+
+      try {
+        // Direct call to local Ollama API
+        const response = await fetch("http://127.0.0.1:11434/api/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: "cineverify",
+            prompt: text,
+            stream: false,
+            options: { temperature: 0.1, num_predict: 350, stop: ["<|im_end|>", "<|endoftext|>"] }
+          })
+        });
+
+        const data = await response.json();
+        let raw = data.response.trim();
+        if (raw.startsWith("```json")) raw = raw.replace(/^```json/, "");
+        if (raw.startsWith("```")) raw = raw.replace(/^```/, "");
+        if (raw.endsWith("```")) raw = raw.replace(/```$/, "");
+        const parsed = JSON.parse(raw.trim());
+
+        renderResult(parsed);
+      } catch (err) {
+        alert("Make sure Ollama is running! Error: " + err.message);
+      } finally {
+        loader.style.display = 'none';
+        btn.disabled = false;
+      }
+    }
+
+    function renderResult(data) {
+      const card = document.getElementById('resultCard');
+      card.style.display = 'block';
+
+      // Verdict
+      const v = data.verification || {};
+      const verdict = v.verdict || "UNKNOWN";
+      const verdictEl = document.getElementById('verdictText');
+      verdictEl.innerText = verdict.replace(/_/g, ' ');
+      verdictEl.className = 'verdict-tag tag-' + verdict;
+
+      // Score
+      const score = Math.round((v.confidence_score || 0) * 100);
+      document.getElementById('scoreText').innerText = score + '%';
+
+      // Claim
+      document.getElementById('coreClaim').innerText = data.core_claim || data.cleaned_text || "N/A";
+
+      // Entities
+      const entEl = document.getElementById('entityList');
+      entEl.innerHTML = '';
+      const entities = data.entities || {};
+      for (const [k, val] of Object.entries(entities)) {
+        if (val) {
+          const pill = document.createElement('div');
+          pill.className = 'entity-pill';
+          pill.innerHTML = `<strong style="color: #fbbf24;">${k}:</strong> ${val}`;
+          entEl.appendChild(pill);
+        }
+      }
+
+      // Calculation
+      const calc = v.calculation || {};
+      document.getElementById('calcReason').innerText = v.verdict_reasoning || "";
+      document.getElementById('calcFormula').innerText = calc.formula || "";
+      document.getElementById('calcStep').innerText = "↳ Step: " + (calc.step_by_step || "");
+
+      // Descriptive Answer
+      document.getElementById('descAnswer').innerText = data.descriptive_answer || v.verdict_reasoning || "Analysis complete.";
+    }
+  </script>
+</body>
+</html>

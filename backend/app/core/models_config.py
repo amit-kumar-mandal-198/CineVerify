@@ -1,15 +1,16 @@
-"""Model identifiers, verification thresholds, and Gemini client helpers (owned by Member 1)."""
+"""Model identifiers, verification thresholds, and client helpers."""
 
 from __future__ import annotations
 
-from functools import lru_cache
-
-from google import genai
-from google.genai import types
+from typing import Any
 
 from app.config import settings
 
-# Fast, high-quota Flash-Lite model with fallback for structured extraction & explanation
+# Local fine-tuned CineVerify SLM (Ollama)
+SLM_MODEL_NAME: str = "cineverify"
+OLLAMA_BASE_URL: str = "http://127.0.0.1:11434"
+
+# Legacy cloud model identifiers (retained for backward compatibility)
 GEMINI_MODEL_NAME: str = "gemini-3.5-flash-lite"
 GEMINI_FALLBACK_MODELS: tuple[str, ...] = (
     "gemini-3.5-flash-lite",
@@ -17,8 +18,8 @@ GEMINI_FALLBACK_MODELS: tuple[str, ...] = (
 )
 _PLACEHOLDER_GEMINI_KEY: str = "your_gemini_api_key_here"
 
-# Pretrained NLI cross-encoder for claim-evidence stance classification
-NLI_MODEL_NAME: str = "cross-encoder/nli-deberta-v3-base"
+# NLI stance verification identifier
+NLI_MODEL_NAME: str = "cineverify-slm-local"
 
 # Bi-encoder for passage similarity filtering / ranking
 EMBEDDING_MODEL_NAME: str = "sentence-transformers/all-MiniLM-L6-v2"
@@ -31,23 +32,10 @@ OUTDATED_GAP_DAYS: int = 180
 
 
 def has_valid_gemini_key() -> bool:
-    """Return True when GEMINI_API_KEY is configured and not the template placeholder."""
-    key = (settings.GEMINI_API_KEY or "").strip()
-    return bool(key and key != _PLACEHOLDER_GEMINI_KEY)
+    """Return False because CineVerify now runs 100% locally on CineVerify SLM."""
+    return False
 
 
-@lru_cache(maxsize=1)
-def _cached_gemini_client(api_key: str) -> genai.Client:
-    """Reuse a single HTTP client pool across claim extraction, explanation, and follow-ups."""
-    return genai.Client(
-        api_key=api_key,
-        http_options=types.HttpOptions(
-            timeout=10_000,
-            retry_options=types.HttpRetryOptions(attempts=1),
-        ),
-    )
-
-
-def create_gemini_client() -> genai.Client:
-    """Return a cached Google GenAI client without multi-second 429 retry stalls."""
-    return _cached_gemini_client(settings.GEMINI_API_KEY)
+def create_gemini_client() -> Any:
+    """Stub client - CineVerify operates 100% self-hosted with local CineVerify SLM."""
+    raise RuntimeError("CineVerify operates 100% self-hosted with local CineVerify SLM.")

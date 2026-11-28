@@ -6,14 +6,6 @@ import logging
 import re
 from typing import Dict, List, Optional, Tuple
 
-from google.genai import types
-
-from app.core.models_config import (
-    GEMINI_FALLBACK_MODELS,
-    create_gemini_client,
-    has_valid_gemini_key,
-)
-from app.core.prompts import EXPLANATION_GENERATION_PROMPT
 from app.schemas.claim import ClaimCategory, ClaimResult
 from app.schemas.evidence import EvidenceItem, EvidencePassage, StanceLabel
 from app.schemas.verdict import (
@@ -24,6 +16,10 @@ from app.schemas.verdict import (
     NLIResult,
     VerdictLabel,
     VerdictOutput,
+)
+from app.services.cineverify_slm import (
+    answer_followup_with_slm,
+    generate_local_investigative_report,
 )
 
 logger = logging.getLogger(__name__)
@@ -67,7 +63,7 @@ def _build_fallback_explanation(
     verdict: VerdictOutput,
     top_items: List[Tuple[EvidencePassage, StanceLabel, float]],
 ) -> str:
-    """Generate a deterministic, strictly grounded summary when Gemini is unavailable."""
+    """Generate a deterministic, strictly grounded summary when SLM report generation is unavailable."""
     supporting = [p.source_name for p, stance, _ in top_items if stance == StanceLabel.SUPPORTS]
     contradicting = [p.source_name for p, stance, _ in top_items if stance == StanceLabel.CONTRADICTS]
     all_sources = list(dict.fromkeys(p.source_name for p, _, _ in top_items))
@@ -105,48 +101,23 @@ def generate_explanation(
     passages: List[EvidencePassage],
     nli_results: List[NLIResult],
 ) -> str:
-    """Generate a concise explanation strictly grounded in the retrieved passages."""
-    if not passages:
-        return (
-            f"No credible Indian cinema or entertainment sources were retrieved to verify "
-            f"the claim '{claim_result.core_claim}'. As a result, the claim is marked UNVERIFIED "
-            f"until reliable reporting becomes available."
+    """Generate a comprehensive structured investigative report powered by local CineVerify SLM."""
+    try:
+        report = generate_local_investigative_report(
+            core_claim=claim_result.core_claim,
+            verdict=verdict.verdict.value,
+            confidence=verdict.confidence,
+            evidence_passages=passages,
+            slm_data=claim_result.slm_data,
+            nli_results=nli_results,
         )
+        if report and len(report.strip()) > 50:
+            return report
+    except Exception as exc:
+        logger.warning("Local SLM report generation failed (%s); falling back to grounded explanation.", exc)
 
     top_items = _pair_evidence(passages, nli_results)
-    evidence_summary = _format_evidence_summary(top_items)
-
-    if not has_valid_gemini_key():
-        logger.warning("GEMINI_API_KEY is not configured; using grounded fallback explanation.")
-        return _build_fallback_explanation(claim_result, verdict, top_items)
-
-    prompt = EXPLANATION_GENERATION_PROMPT.format(
-        claim=claim_result.core_claim,
-        verdict=verdict.verdict.value,
-        evidence_summary=evidence_summary,
-    )
-    try:
-        client = create_gemini_client()
-        last_exc: Optional[Exception] = None
-        for model_name in GEMINI_FALLBACK_MODELS:
-            try:
-                response = client.models.generate_content(
-                    model=model_name,
-                    contents=prompt,
-                    config=types.GenerateContentConfig(temperature=0.2),
-                )
-                explanation = (response.text or "").strip()
-                if not explanation:
-                    raise ValueError(f"Empty explanation returned by {model_name}.")
-                return explanation
-            except Exception as model_exc:
-                last_exc = model_exc
-                logger.warning("Gemini explanation failed on %s (%s); trying next.", model_name, model_exc)
-        if last_exc is not None:
-            raise last_exc
-    except Exception as exc:
-        logger.warning("Gemini explanation generation failed (%s); using fallback.", exc)
-        return _build_fallback_explanation(claim_result, verdict, top_items)
+    return _build_fallback_explanation(claim_result, verdict, top_items)
 
 
 def _snippet_preview(passage: EvidencePassage, limit: int = 160) -> str:
@@ -280,7 +251,7 @@ def build_claim_comparisons(
 
 
 def _build_followup_fallback(request: FollowUpRequest) -> FollowUpResponse:
-    """Grounded deterministic answer when Gemini is unavailable."""
+    """Grounded deterministic answer when SLM is unavailable."""
     q_tokens = set(re.findall(r"[a-z0-9]+", request.question.lower()))
     ranked = sorted(
         request.evidence,
@@ -311,57 +282,27 @@ def _build_followup_fallback(request: FollowUpRequest) -> FollowUpResponse:
 
 
 def answer_followup_question(request: FollowUpRequest) -> FollowUpResponse:
-    """Answer a user follow-up question strictly grounded in the current report's evidence."""
+    """Answer a user follow-up question strictly grounded using the local CineVerify SLM."""
     cited_candidates = list(dict.fromkeys(item.source_name for item in request.evidence[:4]))
-
-    if not has_valid_gemini_key():
-        return _build_followup_fallback(request)
-
-    evidence_lines = "\n".join(
-        f"[{idx}] {item.source_name} ({item.published_date or 'Date unknown'}, stance={item.stance.value}, "
-        f"credibility={int(round(item.credibility_score * 100))}%): {item.title} — {item.snippet}"
+    evidence_summary = "\n".join(
+        f"[{idx}] {item.source_name} ({item.published_date or 'Date unknown'}, stance={item.stance.value}): {item.title} — {item.snippet}"
         for idx, item in enumerate(request.evidence[:6], start=1)
-    ) or "No external evidence passages retrieved."
-
-    history_lines = "\n".join(
-        f"{turn.role.upper()}: {turn.content}" for turn in request.history[-6:]
-    )
-
-    prompt = (
-        "You are CineVerify AI's fact-check assistant answering a follow-up question about a verification report.\n"
-        "STRICT RULES:\n"
-        "- Answer in 2-4 concise, factual sentences.\n"
-        "- ONLY use facts explicitly present in the Verdict Summary and Retrieved Evidence below.\n"
-        "- If the retrieved evidence does not contain the requested detail, say clearly that the retrieved sources do not mention it.\n"
-        "- Cite source names inline when referencing specific claims.\n\n"
-        f"Submitted Claim: {request.claim}\n"
-        f"Core Claim: {request.core_claim}\n"
-        f"Verdict: {request.verdict.value}\n"
-        f"Report Explanation: {request.explanation}\n\n"
-        f"Retrieved Evidence:\n{evidence_lines}\n\n"
-        + (f"Recent Conversation:\n{history_lines}\n\n" if history_lines else "")
-        + f"User Question: {request.question}\n"
     )
 
     try:
-        client = create_gemini_client()
-        for model_name in GEMINI_FALLBACK_MODELS:
-            try:
-                response = client.models.generate_content(
-                    model=model_name,
-                    contents=prompt,
-                    config=types.GenerateContentConfig(temperature=0.2),
-                )
-                answer_text = (response.text or "").strip()
-                if answer_text:
-                    cited = [
-                        name for name in cited_candidates
-                        if name.lower() in answer_text.lower()
-                    ] or cited_candidates[:2]
-                    return FollowUpResponse(answer=answer_text, cited_sources=cited)
-            except Exception as model_exc:
-                logger.warning("Gemini follow-up failed on %s (%s); trying next.", model_name, model_exc)
+        answer_text = answer_followup_with_slm(
+            claim=request.core_claim or request.claim,
+            explanation=request.explanation,
+            question=request.question,
+            evidence_summary=evidence_summary,
+        )
+        if answer_text:
+            cited = [
+                name for name in cited_candidates
+                if name.lower() in answer_text.lower()
+            ] or cited_candidates[:2]
+            return FollowUpResponse(answer=answer_text, cited_sources=cited)
     except Exception as exc:
-        logger.warning("Gemini follow-up failed (%s); using fallback.", exc)
+        logger.warning("Local SLM follow-up QA failed (%s); using fallback.", exc)
 
     return _build_followup_fallback(request)

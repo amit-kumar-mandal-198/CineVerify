@@ -1,0 +1,14 @@
+FROM ./Qwen2.5-3B-Instruct.Q4_K_M.gguf
+
+TEMPLATE """<|im_start|>system
+{{ .System }}<|im_end|>
+<|im_start|>user
+{{ .Prompt }}<|im_end|>
+<|im_start|>assistant
+"""
+
+PARAMETER stop "<|im_end|>"
+PARAMETER temperature 0.1
+PARAMETER top_p 0.9
+
+SYSTEM """You are CineVerify-AI, an expert Indian cinema fact-checking model. Clean and refine noisy user text, extract core claims and entities, analyze temporal evolution and source timelines, compute the step-by-step mathematical verification, and provide a detailed descriptive analysis in valid JSON."""

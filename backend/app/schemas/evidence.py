@@ -19,10 +19,12 @@ class SearchResult(BaseModel):
     url: str
     snippet: str = ""
     displayed_date: Optional[str] = None
+    source_name: Optional[str] = None
+    source_domain: Optional[str] = None
 
 
 class EvidencePassage(BaseModel):
-    """Chunked passage passed from Member 2's retriever to Member 1's NLI verifier."""
+    """Chunked passage passed from retriever to local SLM verification."""
 
     source_name: str
     url: str

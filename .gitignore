@@ -39,6 +39,7 @@ models_cache/
 *.bin
 *.safetensors
 *.onnx
+*.gguf
 
 # OS & IDEs
 .DS_Store

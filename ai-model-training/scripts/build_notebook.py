@@ -1,0 +1,312 @@
+import json
+
+notebook_content = {
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# 🎬 CineVerify-Core-3B-Instruct Training Notebook\n",
+    "### Domain-Specialized Indian Cinema Claim & Entity Extraction SLM\n",
+    "\n",
+    "- **Base Architecture:** `unsloth/Qwen2.5-3B-Instruct`\n",
+    "- **Fine-Tuning Method:** QLoRA 4-bit via Unsloth (Colab Free T4 GPU - 15GB VRAM)\n",
+    "- **Expected Training Time:** ~20-30 minutes for 3 epochs (~300 samples)\n",
+    "- **Export Target:** 16-bit HF checkpoint & 4-bit GGUF (`q4_k_m`) for local inference with 0 API cost."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 1. Verify GPU & Install Dependencies"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": None,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Check GPU availability\n",
+    "!nvidia-smi\n",
+    "\n",
+    "# Install Unsloth and training dependencies\n",
+    "!pip install --no-deps \"unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git\"\n",
+    "!pip install --no-deps xformers trl peft accelerate bitsandbytes datasets\n",
+    "!pip install sentencepiece protobuf"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 2. Load Model & Tokenizer (4-bit QLoRA)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": None,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from unsloth import FastLanguageModel\n",
+    "import torch\n",
+    "\n",
+    "max_seq_length = 1024\n",
+    "dtype = None  # None for auto-detection (Float16 for Tesla T4)\n",
+    "load_in_4bit = True\n",
+    "\n",
+    "model, tokenizer = FastLanguageModel.from_pretrained(\n",
+    "    model_name=\"unsloth/Qwen2.5-3B-Instruct\",\n",
+    "    max_seq_length=max_seq_length,\n",
+    "    dtype=dtype,\n",
+    "    load_in_4bit=load_in_4bit,\n",
+    ")\n",
+    "print(\"Model and tokenizer successfully loaded in 4-bit!\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 3. Attach LoRA Adapters"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": None,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "model = FastLanguageModel.get_peft_model(\n",
+    "    model,\n",
+    "    r=16,\n",
+    "    target_modules=[\"q_proj\", \"k_proj\", \"v_proj\", \"o_proj\", \"gate_proj\", \"up_proj\", \"down_proj\"],\n",
+    "    lora_alpha=16,\n",
+    "    lora_dropout=0,  # Optimized to 0 by Unsloth\n",
+    "    bias=\"none\",\n",
+    "    use_gradient_checkpointing=\"unsloth\",\n",
+    "    random_state=3407,\n",
+    "    use_rslora=False,\n",
+    "    loftq_config=None,\n",
+    ")\n",
+    "\n",
+    "model.print_trainable_parameters()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 4. Load & Format Dataset (ChatML)\n",
+    "You can upload your `cineverify_train.jsonl` file directly to Colab, or run the embedded generator fallback cell below."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": None,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import os\n",
+    "import json\n",
+    "from datasets import Dataset\n",
+    "from unsloth.chat_templates import get_chat_template\n",
+    "\n",
+    "# Set ChatML template on tokenizer\n",
+    "tokenizer = get_chat_template(\n",
+    "    tokenizer,\n",
+    "    chat_template=\"chatml\",\n",
+    "    mapping={\"role\": \"role\", \"content\": \"content\", \"user\": \"user\", \"assistant\": \"assistant\"}\n",
+    ")\n",
+    "\n",
+    "def formatting_prompts_func(examples):\n",
+    "    convos = examples[\"messages\"]\n",
+    "    texts = [tokenizer.apply_chat_template(convo, tokenize=False, add_generation_prompt=False) for convo in convos]\n",
+    "    return {\"text\": texts}\n",
+    "\n",
+    "train_file = \"cineverify_train.jsonl\"\n",
+    "\n",
+    "# If file not uploaded, notify or load sample\n",
+    "if not os.path.exists(train_file):\n",
+    "    print(f\"'{train_file}' not found. Please upload it via the Colab files pane on the left.\")\n",
+    "else:\n",
+    "    raw_data = []\n",
+    "    with open(train_file, 'r', encoding='utf-8') as f:\n",
+    "        for line in f:\n",
+    "            if line.strip():\n",
+    "                raw_data.append(json.loads(line))\n",
+    "    \n",
+    "    hf_dataset = Dataset.from_list(raw_data)\n",
+    "    formatted_dataset = hf_dataset.map(formatting_prompts_func, batched=True)\n",
+    "    print(f\"Loaded and formatted {len(formatted_dataset)} samples!\")\n",
+    "    print(\"\\n--- Sample Formatted Text ---\\n\")\n",
+    "    print(formatted_dataset[0][\"text\"][:350] + \"...\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 5. Train with SFTTrainer (20-30 Mins on Colab T4)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": None,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from trl import SFTTrainer\n",
+    "from transformers import TrainingArguments\n",
+    "from unsloth import is_bfloat16_supported\n",
+    "\n",
+    "trainer = SFTTrainer(\n",
+    "    model=model,\n",
+    "    tokenizer=tokenizer,\n",
+    "    train_dataset=formatted_dataset,\n",
+    "    dataset_text_field=\"text\",\n",
+    "    max_seq_length=max_seq_length,\n",
+    "    dataset_num_proc=2,\n",
+    "    packing=False,\n",
+    "    args=TrainingArguments(\n",
+    "        per_device_train_batch_size=2,\n",
+    "        gradient_accumulation_steps=4,  # Effective batch size = 8\n",
+    "        warmup_steps=5,\n",
+    "        num_train_epochs=3,\n",
+    "        learning_rate=2e-4,\n",
+    "        fp16=not is_bfloat16_supported(),\n",
+    "        bf16=is_bfloat16_supported(),\n",
+    "        logging_steps=5,\n",
+    "        optim=\"adamw_8bit\",\n",
+    "        weight_decay=0.01,\n",
+    "        lr_scheduler_type=\"cosine\",\n",
+    "        seed=3407,\n",
+    "        output_dir=\"outputs\",\n",
+    "        report_to=\"none\"\n",
+    "    ),\n",
+    ")\n",
+    "\n",
+    "trainer_stats = trainer.train()\n",
+    "print(\"Training finished! Stats:\", trainer_stats)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 6. Fast Inference & Contract Verification"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": None,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Switch model to inference mode\n",
+    "FastLanguageModel.for_inference(model)\n",
+    "\n",
+    "test_headlines = [\n",
+    "    \"Deepika Padukone joins Spirit opposite Prabhas\",\n",
+    "    \"Pushpa 2: The Rule hits ₹1000 Crore milestone at worldwide box office!\",\n",
+    "    \"Reports suggest Lokesh Kanagaraj roped in Fahadh Faasil for cameo in Coolie starring Rajinikanth\",\n",
+    "    \"SSMB29 locks worldwide theatrical release on Sankranti 2026\"\n",
+    "]\n",
+    "\n",
+    "for headline in test_headlines:\n",
+    "    messages = [\n",
+    "        {\"role\": \"system\", \"content\": \"You are CineVerify-AI, an expert Indian cinema fact-checking model. Extract the core claim, category, and entities from the given text in valid JSON.\"},\n",
+    "        {\"role\": \"user\", \"content\": headline}\n",
+    "    ]\n",
+    "    \n",
+    "    inputs = tokenizer.apply_chat_template(\n",
+    "        messages,\n",
+    "        tokenize=True,\n",
+    "        add_generation_prompt=True,\n",
+    "        return_tensors=\"pt\"\n",
+    "    ).to(\"cuda\")\n",
+    "    \n",
+    "    outputs = model.generate(input_ids=inputs, max_new_tokens=256, use_cache=True, temperature=0.1)\n",
+    "    decoded = tokenizer.batch_decode(outputs)\n",
+    "    \n",
+    "    # Extract assistant response\n",
+    "    resp = decoded[0].split(\"<|im_start|>assistant\\n\")[-1].replace(\"<|im_end|>\", \"\").strip()\n",
+    "    print(f\"\\n[HEADLINE]: {headline}\")\n",
+    "    print(f\"[OUTPUT JSON]:\\n{resp}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 7. Export Model (16-bit Checkpoint & GGUF Quantization)\n",
+    "Export to:\n",
+    "1. **Merged 16-bit / LoRA weights** (to upload to Hugging Face Hub)\n",
+    "2. **4-bit Quantized GGUF (`q4_k_m`)** (~1.9 GB file for local CPU/GPU inference in FastAPI/Ollama)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": None,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Export to 4-bit Quantized GGUF directly\n",
+    "model.save_pretrained_gguf(\n",
+    "    \"CineVerify-Core-3B-Instruct-GGUF\",\n",
+    "    tokenizer,\n",
+    "    quantization_method=\"q4_k_m\"\n",
+    ")\n",
+    "print(\"GGUF model exported! Check the 'CineVerify-Core-3B-Instruct-GGUF' folder.\")\n",
+    "\n",
+    "# Optional: Save LoRA adapters locally\n",
+    "model.save_pretrained(\"CineVerify-Core-3B-LoRA\")\n",
+    "tokenizer.save_pretrained(\"CineVerify-Core-3B-LoRA\")\n",
+    "print(\"LoRA adapter weights saved!\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Optional: Push to Hugging Face Hub\n",
+    "Uncomment the cell below and add your HF Token to push directly to your Hugging Face profile."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": None,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# from huggingface_hub import login\n",
+    "# login(\"YOUR_HF_TOKEN\")\n",
+    "# model.push_to_hub_merged(\"your-username/CineVerify-Core-3B-Instruct\", tokenizer, save_method=\"merged_16bit\")\n",
+    "# model.push_to_hub_gguf(\"your-username/CineVerify-Core-3B-Instruct-GGUF\", tokenizer, quantization_method=\"q4_k_m\")"
+   ]
+  }
+ ],
+ "metadata": {
+  "accelerator": "GPU",
+  "colab": {
+   "gpuType": "T4",
+   "provenance": []
+  },
+  "kernelspec": {
+   "display_name": "Python 3",
+   "name": "python3"
+  },
+  "language_info": {
+   "name": "python"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 0
+}
+
+with open("ai-model-training/notebooks/CineVerify_Training_Colab.ipynb", "w", encoding="utf-8") as f:
+    json.dump(notebook_content, f, indent=1)
+
+print("Notebook generated successfully!")

@@ -1,0 +1,978 @@
+[
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Latest update check: did Jailer earn awards recognition (Tamil Blockbuster of 2023)?\n\nRetrieved Live Evidence:\n[1] Hindustan Times (Date: Recent): Sun Pictures and Nelson Dilipkumar headline Jailer (Tamil Blockbuster of 2023).\n[2] Sacnilk (Date: Recent): Industry records list Jailer under Sun Pictures with Nelson Dilipkumar."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Jailer is associated with Tamil Blockbuster of 2023.\", \"category\": \"movie_announcement\", \"entities\": {\"movie\": \"Jailer\", \"person\": \"Nelson Dilipkumar, Rajinikanth\", \"production_house\": \"Sun Pictures\", \"date\": \"Current\", \"platform\": null, \"amount\": null}, \"verdict\": \"TRUE\", \"confidence\": 0.898, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Verified directly against mainstream entertainment and trade profiles.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.88, \"entity_feasibility\": 0.92, \"timeline_feasibility\": 0.9, \"temporal_recency\": 0.9, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.88) + (0.25 * 0.92) + (0.20 * 0.90) + (0.20 * 0.90) - 0.00\", \"step_by_step\": \"0.308 + 0.230 + 0.180 + 0.180 - 0.00 = 0.898 -> TRUE (90%)\", \"final_score\": 0.898}, \"reasoning\": \"Confirmed TRUE. Authoritative sources verify Jailer with Nelson Dilipkumar under Sun Pictures.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Dangal confirmed to feature surprise cameo by Kamal Haasan and release Clash on Diwali.\n\nRetrieved Live Evidence:\n[1] Koimoi (Date: Recent): Social media fan handles speculate on unconfirmed cameos in Dangal.\n[2] Times of India (Date: Recent): No official confirmation yet from Aamir Khan Productions regarding festival clashes or guest roles."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Dangal will feature a cameo by Kamal Haasan and clash on Diwali.\", \"category\": \"casting\", \"entities\": {\"movie\": \"Dangal\", \"person\": \"Kamal Haasan\", \"production_house\": \"Aamir Khan Productions\", \"date\": \"Diwali\", \"platform\": null, \"amount\": null}, \"verdict\": \"UNVERIFIED\", \"confidence\": 0.42, \"claim_timeframe\": \"future\", \"temporal_verdict_rule\": \"Lack of authoritative trade corroboration or production confirmation leaves claim unverified.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"neutral\"}, {\"index\": 2, \"stance\": \"neutral\"}], \"calculation\": {\"source_authority\": 0.62, \"entity_feasibility\": 0.48, \"timeline_feasibility\": 0.5, \"temporal_recency\": 0.5, \"dispute_penalty\": 0.1, \"formula\": \"Score = (0.35 * 0.62) + (0.25 * 0.48) + (0.20 * 0.50) + (0.20 * 0.50) - 0.10\", \"step_by_step\": \"0.217 + 0.120 + 0.100 + 0.100 - 0.10 = 0.437 -> UNVERIFIED (44%)\", \"final_score\": 0.437}, \"reasoning\": \"Marked UNVERIFIED. Social media speculation regarding Dangal lacks confirmation from makers Aamir Khan Productions or Tier-1 trade trackers.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Fact check needed — Yash Raj Films producing War 2 directed by Ayan Mukerji?\n\nRetrieved Live Evidence:\n[1] Hindustan Times (Date: Recent): Yash Raj Films and Ayan Mukerji headline War 2 (YRF Spy Universe installment).\n[2] Sacnilk (Date: Recent): Industry records list War 2 under Yash Raj Films with Ayan Mukerji."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"War 2 is produced by Yash Raj Films and directed by Ayan Mukerji (YRF Spy Universe installment).\", \"category\": \"movie_announcement\", \"entities\": {\"movie\": \"War 2\", \"person\": \"Ayan Mukerji, Hrithik Roshan, Jr NTR\", \"production_house\": \"Yash Raj Films\", \"date\": \"Current\", \"platform\": null, \"amount\": null}, \"verdict\": \"TRUE\", \"confidence\": 0.898, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Verified directly against mainstream entertainment and trade profiles.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.88, \"entity_feasibility\": 0.92, \"timeline_feasibility\": 0.9, \"temporal_recency\": 0.9, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.88) + (0.25 * 0.92) + (0.20 * 0.90) + (0.20 * 0.90) - 0.00\", \"step_by_step\": \"0.308 + 0.230 + 0.180 + 0.180 - 0.00 = 0.898 -> TRUE (90%)\", \"final_score\": 0.898}, \"reasoning\": \"Confirmed TRUE. Authoritative sources verify War 2 with Ayan Mukerji under Yash Raj Films.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Trade clash: one report says Leo collected ₹341 Crore while another claims ₹615 Crore. Is one fake?\n\nRetrieved Live Evidence:\n[1] Sacnilk (Date: Lifetime): Leo closes India Net collection at ₹341 Crore (excluding taxes).\n[2] Bollywood Hungama (Date: Lifetime): Leo achieves ₹615 Crore Worldwide Gross including overseas territories."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Leo collection figures of ₹341 Crore and ₹615 Crore reflect conflicting box office metrics.\", \"category\": \"box_office\", \"entities\": {\"movie\": \"Leo\", \"person\": \"Thalapathy Vijay\", \"production_house\": \"Seven Screen Studio\", \"date\": \"Lifetime\", \"platform\": null, \"amount\": \"₹341 Crore / ₹615 Crore\"}, \"verdict\": \"PARTIALLY_TRUE\", \"confidence\": 0.824, \"claim_timeframe\": \"lifetime\", \"temporal_verdict_rule\": \"Neither figure is fabricated. Comparing India Net (tax-excluded domestic) directly with Worldwide Gross causes apparent discrepancy.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.92, \"entity_feasibility\": 0.92, \"timeline_feasibility\": 0.88, \"temporal_recency\": 0.88, \"dispute_penalty\": 0.08, \"formula\": \"Score = (0.35 * 0.92) + (0.25 * 0.92) + (0.20 * 0.88) + (0.20 * 0.88) - 0.08\", \"step_by_step\": \"0.322 + 0.230 + 0.176 + 0.176 - 0.08 = 0.824 -> PARTIALLY_TRUE (82%)\", \"final_score\": 0.824}, \"reasoning\": \"Assessed as PARTIALLY TRUE. Both numbers for Leo are valid trade metrics: ₹341 Crore represents India Net earnings, whereas ₹615 Crore represents total Worldwide Gross.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Salaar: Part 1 - Ceasefire directed by Prashanth Neel is releasing on September 28, 2023.\n\nRetrieved Live Evidence:\n[1] The Hindu (Date: Older Announcement): Makers initially eyed September 28, 2023 for Salaar: Part 1 - Ceasefire.\n[2] Hindustan Times (Date: Updated Schedule): Hombale Films officially confirmed Salaar: Part 1 - Ceasefire postponed to December 22, 2023."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Salaar: Part 1 - Ceasefire directed by Prashanth Neel will release on September 28, 2023.\", \"category\": \"release_update\", \"entities\": {\"movie\": \"Salaar: Part 1 - Ceasefire\", \"person\": \"Prabhas\", \"production_house\": \"Hombale Films\", \"date\": \"September 28, 2023\", \"platform\": null, \"amount\": null}, \"verdict\": \"OUTDATED\", \"confidence\": 0.453, \"claim_timeframe\": \"superseded_historical\", \"temporal_verdict_rule\": \"The September 28, 2023 window was superseded by newer official production schedules moving Salaar: Part 1 - Ceasefire to December 22, 2023.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"neutral\"}, {\"index\": 2, \"stance\": \"contradicts\"}], \"calculation\": {\"source_authority\": 0.88, \"entity_feasibility\": 0.9, \"timeline_feasibility\": 0.45, \"temporal_recency\": 0.4, \"dispute_penalty\": 0.25, \"formula\": \"Score = (0.35 * 0.88) + (0.25 * 0.90) + (0.20 * 0.45) + (0.20 * 0.40) - 0.25\", \"step_by_step\": \"0.308 + 0.225 + 0.090 + 0.080 - 0.25 = 0.453 -> OUTDATED (45%)\", \"final_score\": 0.453}, \"reasoning\": \"Evaluated as OUTDATED. While Hombale Films initially considered September 28, 2023, updated official disclosures locked December 22, 2023 as the final release date.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: War 2 confirmed to feature surprise cameo by Kamal Haasan and release Clash on Diwali.\n\nRetrieved Live Evidence:\n[1] Koimoi (Date: Recent): Social media fan handles speculate on unconfirmed cameos in War 2.\n[2] Times of India (Date: Recent): No official confirmation yet from Yash Raj Films regarding festival clashes or guest roles."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"War 2 will feature a cameo by Kamal Haasan and clash on Diwali.\", \"category\": \"casting\", \"entities\": {\"movie\": \"War 2\", \"person\": \"Kamal Haasan\", \"production_house\": \"Yash Raj Films\", \"date\": \"Diwali\", \"platform\": null, \"amount\": null}, \"verdict\": \"UNVERIFIED\", \"confidence\": 0.42, \"claim_timeframe\": \"future\", \"temporal_verdict_rule\": \"Lack of authoritative trade corroboration or production confirmation leaves claim unverified.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"neutral\"}, {\"index\": 2, \"stance\": \"neutral\"}], \"calculation\": {\"source_authority\": 0.62, \"entity_feasibility\": 0.48, \"timeline_feasibility\": 0.5, \"temporal_recency\": 0.5, \"dispute_penalty\": 0.1, \"formula\": \"Score = (0.35 * 0.62) + (0.25 * 0.48) + (0.20 * 0.50) + (0.20 * 0.50) - 0.10\", \"step_by_step\": \"0.217 + 0.120 + 0.100 + 0.100 - 0.10 = 0.437 -> UNVERIFIED (44%)\", \"final_score\": 0.437}, \"reasoning\": \"Marked UNVERIFIED. Social media speculation regarding War 2 lacks confirmation from makers Yash Raj Films or Tier-1 trade trackers.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Has Dangal crossed ₹1,000 Crore worldwide? Older news said ₹480 Crore.\n\nRetrieved Live Evidence:\n[1] Sacnilk (Date: Day 10): Dangal worldwide collection stands at ₹480 Crore gross after ten days.\n[2] Bollywood Hungama (Date: Lifetime): Dangal starring Aamir Khan officially crosses ₹1,000 Crore milestone, reaching ₹2,070 Crore worldwide."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Dangal has surpassed ₹1,000 Crore at the worldwide box office.\", \"category\": \"box_office\", \"entities\": {\"movie\": \"Dangal\", \"person\": \"Aamir Khan\", \"production_house\": \"Aamir Khan Productions\", \"date\": \"Current\", \"platform\": null, \"amount\": \"₹1,000 Crore\"}, \"verdict\": \"TRUE\", \"confidence\": 0.937, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Day 10 reporting (₹480 Crore) was accurate at the time of publication and is not misleading, but newer official trade tracking confirms Dangal reached ₹2,070 Crore, exceeding ₹1,000 Crore.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"neutral\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.92, \"entity_feasibility\": 0.95, \"timeline_feasibility\": 0.94, \"temporal_recency\": 0.95, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.92) + (0.25 * 0.95) + (0.20 * 0.94) + (0.20 * 0.95) - 0.00\", \"step_by_step\": \"0.322 + 0.237 + 0.188 + 0.190 - 0.00 = 0.937 -> TRUE (94%)\", \"final_score\": 0.937}, \"reasoning\": \"Confirmed TRUE. While earlier Day 10 dispatches accurately reported ₹480 Crore, subsequent theatrical runs carried Dangal past ₹1,000 Crore to ₹2,070 Crore worldwide.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: War 2 releasing on Christmas 2027\n\nRetrieved Live Evidence:\n[1] The Indian Express (Date: Recent): Speculation around War 2 continues, though Yash Raj Films has not locked any Christmas 2027 release date.\n[2] Pinkvilla (Date: Recent): Pre-production on War 2 remains early with no official release window confirmed."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"War 2 will release on Christmas 2027.\", \"category\": \"release_update\", \"entities\": {\"movie\": \"War 2\", \"person\": \"Hrithik Roshan, Jr NTR\", \"production_house\": \"Yash Raj Films\", \"date\": \"Christmas 2027\", \"platform\": null, \"amount\": null}, \"verdict\": \"UNVERIFIED\", \"confidence\": 0.44, \"claim_timeframe\": \"future\", \"temporal_verdict_rule\": \"Exact title 'War 2' preserved; no official confirmation supports the speculated Christmas 2027 date.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"neutral\"}, {\"index\": 2, \"stance\": \"neutral\"}], \"calculation\": {\"source_authority\": 0.8, \"entity_feasibility\": 0.5, \"timeline_feasibility\": 0.5, \"temporal_recency\": 0.5, \"dispute_penalty\": 0.1, \"formula\": \"Score = (0.35 * 0.80) + (0.25 * 0.50) + (0.20 * 0.50) + (0.20 * 0.50) - 0.10\", \"step_by_step\": \"0.280 + 0.125 + 0.100 + 0.100 - 0.10 = 0.505 -> UNVERIFIED (50%)\", \"final_score\": 0.505}, \"reasoning\": \"Marked UNVERIFIED. While trade outlets discuss War 2 in early development, Yash Raj Films has not officially confirmed Christmas 2027.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Trade clash: one report says Salaar: Part 1 - Ceasefire collected ₹406 Crore while another claims ₹715 Crore. Is one fake?\n\nRetrieved Live Evidence:\n[1] Sacnilk (Date: Lifetime): Salaar: Part 1 - Ceasefire closes India Net collection at ₹406 Crore (excluding taxes).\n[2] Bollywood Hungama (Date: Lifetime): Salaar: Part 1 - Ceasefire achieves ₹715 Crore Worldwide Gross including overseas territories."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Salaar: Part 1 - Ceasefire collection figures of ₹406 Crore and ₹715 Crore reflect conflicting box office metrics.\", \"category\": \"box_office\", \"entities\": {\"movie\": \"Salaar: Part 1 - Ceasefire\", \"person\": \"Prabhas\", \"production_house\": \"Hombale Films\", \"date\": \"Lifetime\", \"platform\": null, \"amount\": \"₹406 Crore / ₹715 Crore\"}, \"verdict\": \"PARTIALLY_TRUE\", \"confidence\": 0.824, \"claim_timeframe\": \"lifetime\", \"temporal_verdict_rule\": \"Neither figure is fabricated. Comparing India Net (tax-excluded domestic) directly with Worldwide Gross causes apparent discrepancy.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.92, \"entity_feasibility\": 0.92, \"timeline_feasibility\": 0.88, \"temporal_recency\": 0.88, \"dispute_penalty\": 0.08, \"formula\": \"Score = (0.35 * 0.92) + (0.25 * 0.92) + (0.20 * 0.88) + (0.20 * 0.88) - 0.08\", \"step_by_step\": \"0.322 + 0.230 + 0.176 + 0.176 - 0.08 = 0.824 -> PARTIALLY_TRUE (82%)\", \"final_score\": 0.824}, \"reasoning\": \"Assessed as PARTIALLY TRUE. Both numbers for Salaar: Part 1 - Ceasefire are valid trade metrics: ₹406 Crore represents India Net earnings, whereas ₹715 Crore represents total Worldwide Gross.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Leo locked its digital OTT streaming premiere on Netflix.\n\nRetrieved Live Evidence:\n[1] The Indian Express (Date: Recent): Leo officially arrives for digital streaming on Netflix on November 24, 2023.\n[2] Film Companion (Date: Recent): Streaming rights for Thalapathy Vijay's Leo confirmed with Netflix."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Leo is streaming on Netflix.\", \"category\": \"release_update\", \"entities\": {\"movie\": \"Leo\", \"person\": \"Thalapathy Vijay\", \"production_house\": \"Seven Screen Studio\", \"date\": \"November 24, 2023\", \"platform\": \"Netflix\", \"amount\": null}, \"verdict\": \"TRUE\", \"confidence\": 0.918, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Verified digital premiere disclosure on Netflix (November 24, 2023).\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.9, \"entity_feasibility\": 0.94, \"timeline_feasibility\": 0.92, \"temporal_recency\": 0.92, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.90) + (0.25 * 0.94) + (0.20 * 0.92) + (0.20 * 0.92) - 0.00\", \"step_by_step\": \"0.315 + 0.235 + 0.184 + 0.184 - 0.00 = 0.918 -> TRUE (92%)\", \"final_score\": 0.918}, \"reasoning\": \"Confirmed TRUE. Both The Indian Express and Film Companion verify that Leo officially premiered on Netflix.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Latest update check: did Dangal earn awards recognition (Highest-grossing Indian film worldwide)?\n\nRetrieved Live Evidence:\n[1] Hindustan Times (Date: Recent): Aamir Khan Productions and Nitesh Tiwari headline Dangal (Highest-grossing Indian film worldwide).\n[2] Sacnilk (Date: Recent): Industry records list Dangal under Aamir Khan Productions with Nitesh Tiwari."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Dangal is associated with Highest-grossing Indian film worldwide.\", \"category\": \"movie_announcement\", \"entities\": {\"movie\": \"Dangal\", \"person\": \"Nitesh Tiwari, Aamir Khan\", \"production_house\": \"Aamir Khan Productions\", \"date\": \"Current\", \"platform\": null, \"amount\": null}, \"verdict\": \"TRUE\", \"confidence\": 0.898, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Verified directly against mainstream entertainment and trade profiles.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.88, \"entity_feasibility\": 0.92, \"timeline_feasibility\": 0.9, \"temporal_recency\": 0.9, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.88) + (0.25 * 0.92) + (0.20 * 0.90) + (0.20 * 0.90) - 0.00\", \"step_by_step\": \"0.308 + 0.230 + 0.180 + 0.180 - 0.00 = 0.898 -> TRUE (90%)\", \"final_score\": 0.898}, \"reasoning\": \"Confirmed TRUE. Authoritative sources verify Dangal with Nitesh Tiwari under Aamir Khan Productions.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Jailer confirmed to feature surprise cameo by Kamal Haasan and release Clash on Diwali.\n\nRetrieved Live Evidence:\n[1] Koimoi (Date: Recent): Social media fan handles speculate on unconfirmed cameos in Jailer.\n[2] Times of India (Date: Recent): No official confirmation yet from Sun Pictures regarding festival clashes or guest roles."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Jailer will feature a cameo by Kamal Haasan and clash on Diwali.\", \"category\": \"casting\", \"entities\": {\"movie\": \"Jailer\", \"person\": \"Kamal Haasan\", \"production_house\": \"Sun Pictures\", \"date\": \"Diwali\", \"platform\": null, \"amount\": null}, \"verdict\": \"UNVERIFIED\", \"confidence\": 0.42, \"claim_timeframe\": \"future\", \"temporal_verdict_rule\": \"Lack of authoritative trade corroboration or production confirmation leaves claim unverified.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"neutral\"}, {\"index\": 2, \"stance\": \"neutral\"}], \"calculation\": {\"source_authority\": 0.62, \"entity_feasibility\": 0.48, \"timeline_feasibility\": 0.5, \"temporal_recency\": 0.5, \"dispute_penalty\": 0.1, \"formula\": \"Score = (0.35 * 0.62) + (0.25 * 0.48) + (0.20 * 0.50) + (0.20 * 0.50) - 0.10\", \"step_by_step\": \"0.217 + 0.120 + 0.100 + 0.100 - 0.10 = 0.437 -> UNVERIFIED (44%)\", \"final_score\": 0.437}, \"reasoning\": \"Marked UNVERIFIED. Social media speculation regarding Jailer lacks confirmation from makers Sun Pictures or Tier-1 trade trackers.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Has Jailer crossed ₹500 Crore worldwide? Older news said ₹490 Crore.\n\nRetrieved Live Evidence:\n[1] Sacnilk (Date: Day 10): Jailer worldwide collection stands at ₹490 Crore gross after ten days.\n[2] Bollywood Hungama (Date: Lifetime): Jailer starring Rajinikanth officially crosses ₹500 Crore milestone, reaching ₹650 Crore worldwide."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Jailer has surpassed ₹500 Crore at the worldwide box office.\", \"category\": \"box_office\", \"entities\": {\"movie\": \"Jailer\", \"person\": \"Rajinikanth\", \"production_house\": \"Sun Pictures\", \"date\": \"Current\", \"platform\": null, \"amount\": \"₹500 Crore\"}, \"verdict\": \"TRUE\", \"confidence\": 0.937, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Day 10 reporting (₹490 Crore) was accurate at the time of publication and is not misleading, but newer official trade tracking confirms Jailer reached ₹650 Crore, exceeding ₹500 Crore.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"neutral\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.92, \"entity_feasibility\": 0.95, \"timeline_feasibility\": 0.94, \"temporal_recency\": 0.95, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.92) + (0.25 * 0.95) + (0.20 * 0.94) + (0.20 * 0.95) - 0.00\", \"step_by_step\": \"0.322 + 0.237 + 0.188 + 0.190 - 0.00 = 0.937 -> TRUE (94%)\", \"final_score\": 0.937}, \"reasoning\": \"Confirmed TRUE. While earlier Day 10 dispatches accurately reported ₹490 Crore, subsequent theatrical runs carried Jailer past ₹500 Crore to ₹650 Crore worldwide.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Fact check needed — Aamir Khan Productions producing Dangal directed by Nitesh Tiwari?\n\nRetrieved Live Evidence:\n[1] Hindustan Times (Date: Recent): Aamir Khan Productions and Nitesh Tiwari headline Dangal (Highest-grossing Indian film worldwide).\n[2] Sacnilk (Date: Recent): Industry records list Dangal under Aamir Khan Productions with Nitesh Tiwari."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Dangal is produced by Aamir Khan Productions and directed by Nitesh Tiwari (Highest-grossing Indian film worldwide).\", \"category\": \"movie_announcement\", \"entities\": {\"movie\": \"Dangal\", \"person\": \"Nitesh Tiwari, Aamir Khan\", \"production_house\": \"Aamir Khan Productions\", \"date\": \"Current\", \"platform\": null, \"amount\": null}, \"verdict\": \"TRUE\", \"confidence\": 0.898, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Verified directly against mainstream entertainment and trade profiles.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.88, \"entity_feasibility\": 0.92, \"timeline_feasibility\": 0.9, \"temporal_recency\": 0.9, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.88) + (0.25 * 0.92) + (0.20 * 0.90) + (0.20 * 0.90) - 0.00\", \"step_by_step\": \"0.308 + 0.230 + 0.180 + 0.180 - 0.00 = 0.898 -> TRUE (90%)\", \"final_score\": 0.898}, \"reasoning\": \"Confirmed TRUE. Authoritative sources verify Dangal with Nitesh Tiwari under Aamir Khan Productions.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Viral claim: Trade confirms Chhaava is a box office disaster losing distributors money\n\nRetrieved Live Evidence:\n[1] Sacnilk (Date: Recent): Chhaava opened slower in a single sub-circuit before rebounding strongly across worldwide markets to reach ₹790 Crore.\n[2] Pinkvilla (Date: Recent): Select regional reports cited modest Day 1 morning occupancy, which social media spun out of context despite strong final numbers."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Viral claim: Trade confirms Chhaava is a box office disaster losing distributors money\", \"category\": \"box_office\", \"entities\": {\"movie\": \"Chhaava\", \"person\": \"Vicky Kaushal\", \"production_house\": \"Maddock Films\", \"date\": null, \"platform\": null, \"amount\": null}, \"verdict\": \"MISLEADING\", \"confidence\": 0.474, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Assertion twists an accurate partial fact or deal discussion out of context, distorting the real outcome.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"contradicts\"}, {\"index\": 2, \"stance\": \"neutral\"}], \"calculation\": {\"source_authority\": 0.84, \"entity_feasibility\": 0.8, \"timeline_feasibility\": 0.5, \"temporal_recency\": 0.5, \"dispute_penalty\": 0.22, \"formula\": \"Score = (0.35 * 0.84) + (0.25 * 0.80) + (0.20 * 0.50) + (0.20 * 0.50) - 0.22\", \"step_by_step\": \"0.294 + 0.200 + 0.100 + 0.100 - 0.22 = 0.474 -> MISLEADING (47%)\", \"final_score\": 0.474}, \"reasoning\": \"Classified as MISLEADING. While partial sub-details existed in early coverage, Chhaava did not suffer the distorted outcome claimed.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Dangal releasing on Christmas 2027\n\nRetrieved Live Evidence:\n[1] The Indian Express (Date: Recent): Speculation around Dangal continues, though Aamir Khan Productions has not locked any Christmas 2027 release date.\n[2] Pinkvilla (Date: Recent): Pre-production on Dangal remains early with no official release window confirmed."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Dangal will release on Christmas 2027.\", \"category\": \"release_update\", \"entities\": {\"movie\": \"Dangal\", \"person\": \"Aamir Khan\", \"production_house\": \"Aamir Khan Productions\", \"date\": \"Christmas 2027\", \"platform\": null, \"amount\": null}, \"verdict\": \"UNVERIFIED\", \"confidence\": 0.44, \"claim_timeframe\": \"future\", \"temporal_verdict_rule\": \"Exact title 'Dangal' preserved; no official confirmation supports the speculated Christmas 2027 date.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"neutral\"}, {\"index\": 2, \"stance\": \"neutral\"}], \"calculation\": {\"source_authority\": 0.8, \"entity_feasibility\": 0.5, \"timeline_feasibility\": 0.5, \"temporal_recency\": 0.5, \"dispute_penalty\": 0.1, \"formula\": \"Score = (0.35 * 0.80) + (0.25 * 0.50) + (0.20 * 0.50) + (0.20 * 0.50) - 0.10\", \"step_by_step\": \"0.280 + 0.125 + 0.100 + 0.100 - 0.10 = 0.505 -> UNVERIFIED (50%)\", \"final_score\": 0.505}, \"reasoning\": \"Marked UNVERIFIED. While trade outlets discuss Dangal in early development, Aamir Khan Productions has not officially confirmed Christmas 2027.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Salaar: Part 1 - Ceasefire releasing on Christmas 2027\n\nRetrieved Live Evidence:\n[1] The Indian Express (Date: Recent): Speculation around Salaar: Part 1 - Ceasefire continues, though Hombale Films has not locked any Christmas 2027 release date.\n[2] Pinkvilla (Date: Recent): Pre-production on Salaar: Part 1 - Ceasefire remains early with no official release window confirmed."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Salaar: Part 1 - Ceasefire will release on Christmas 2027.\", \"category\": \"release_update\", \"entities\": {\"movie\": \"Salaar: Part 1 - Ceasefire\", \"person\": \"Prabhas\", \"production_house\": \"Hombale Films\", \"date\": \"Christmas 2027\", \"platform\": null, \"amount\": null}, \"verdict\": \"UNVERIFIED\", \"confidence\": 0.44, \"claim_timeframe\": \"future\", \"temporal_verdict_rule\": \"Exact title 'Salaar: Part 1 - Ceasefire' preserved; no official confirmation supports the speculated Christmas 2027 date.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"neutral\"}, {\"index\": 2, \"stance\": \"neutral\"}], \"calculation\": {\"source_authority\": 0.8, \"entity_feasibility\": 0.5, \"timeline_feasibility\": 0.5, \"temporal_recency\": 0.5, \"dispute_penalty\": 0.1, \"formula\": \"Score = (0.35 * 0.80) + (0.25 * 0.50) + (0.20 * 0.50) + (0.20 * 0.50) - 0.10\", \"step_by_step\": \"0.280 + 0.125 + 0.100 + 0.100 - 0.10 = 0.505 -> UNVERIFIED (50%)\", \"final_score\": 0.505}, \"reasoning\": \"Marked UNVERIFIED. While trade outlets discuss Salaar: Part 1 - Ceasefire in early development, Hombale Films has not officially confirmed Christmas 2027.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Chhaava releasing on Christmas 2027\n\nRetrieved Live Evidence:\n[1] The Indian Express (Date: Recent): Speculation around Chhaava continues, though Maddock Films has not locked any Christmas 2027 release date.\n[2] Pinkvilla (Date: Recent): Pre-production on Chhaava remains early with no official release window confirmed."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Chhaava will release on Christmas 2027.\", \"category\": \"release_update\", \"entities\": {\"movie\": \"Chhaava\", \"person\": \"Vicky Kaushal\", \"production_house\": \"Maddock Films\", \"date\": \"Christmas 2027\", \"platform\": null, \"amount\": null}, \"verdict\": \"UNVERIFIED\", \"confidence\": 0.44, \"claim_timeframe\": \"future\", \"temporal_verdict_rule\": \"Exact title 'Chhaava' preserved; no official confirmation supports the speculated Christmas 2027 date.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"neutral\"}, {\"index\": 2, \"stance\": \"neutral\"}], \"calculation\": {\"source_authority\": 0.8, \"entity_feasibility\": 0.5, \"timeline_feasibility\": 0.5, \"temporal_recency\": 0.5, \"dispute_penalty\": 0.1, \"formula\": \"Score = (0.35 * 0.80) + (0.25 * 0.50) + (0.20 * 0.50) + (0.20 * 0.50) - 0.10\", \"step_by_step\": \"0.280 + 0.125 + 0.100 + 0.100 - 0.10 = 0.505 -> UNVERIFIED (50%)\", \"final_score\": 0.505}, \"reasoning\": \"Marked UNVERIFIED. While trade outlets discuss Chhaava in early development, Maddock Films has not officially confirmed Christmas 2027.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Dangal directed by Nitesh Tiwari starring Aamir Khan begins official production under Aamir Khan Productions.\n\nRetrieved Live Evidence:\n[1] The Times of India (Date: Recent): Nitesh Tiwari and Aamir Khan commence shooting key sequences for Dangal.\n[2] India Today (Date: Recent): Aamir Khan Productions confirms active schedule for Dangal featuring Aamir Khan."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Dangal starring Aamir Khan has commenced official filming under Aamir Khan Productions.\", \"category\": \"movie_announcement\", \"entities\": {\"movie\": \"Dangal\", \"person\": \"Aamir Khan\", \"production_house\": \"Aamir Khan Productions\", \"date\": \"Current\", \"platform\": null, \"amount\": null}, \"verdict\": \"TRUE\", \"confidence\": 0.9, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Corroborated by multiple mainstream entertainment desks citing ongoing filming.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.85, \"entity_feasibility\": 0.94, \"timeline_feasibility\": 0.92, \"temporal_recency\": 0.92, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.85) + (0.25 * 0.94) + (0.20 * 0.92) + (0.20 * 0.92) - 0.00\", \"step_by_step\": \"0.297 + 0.235 + 0.184 + 0.184 - 0.00 = 0.900 -> TRUE (90%)\", \"final_score\": 0.9}, \"reasoning\": \"Confirmed TRUE. Reporting from The Times of India and India Today verifies that Nitesh Tiwari's Dangal with Aamir Khan is actively filming.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Leo releasing on Christmas 2027\n\nRetrieved Live Evidence:\n[1] The Indian Express (Date: Recent): Speculation around Leo continues, though Seven Screen Studio has not locked any Christmas 2027 release date.\n[2] Pinkvilla (Date: Recent): Pre-production on Leo remains early with no official release window confirmed."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Leo will release on Christmas 2027.\", \"category\": \"release_update\", \"entities\": {\"movie\": \"Leo\", \"person\": \"Thalapathy Vijay\", \"production_house\": \"Seven Screen Studio\", \"date\": \"Christmas 2027\", \"platform\": null, \"amount\": null}, \"verdict\": \"UNVERIFIED\", \"confidence\": 0.44, \"claim_timeframe\": \"future\", \"temporal_verdict_rule\": \"Exact title 'Leo' preserved; no official confirmation supports the speculated Christmas 2027 date.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"neutral\"}, {\"index\": 2, \"stance\": \"neutral\"}], \"calculation\": {\"source_authority\": 0.8, \"entity_feasibility\": 0.5, \"timeline_feasibility\": 0.5, \"temporal_recency\": 0.5, \"dispute_penalty\": 0.1, \"formula\": \"Score = (0.35 * 0.80) + (0.25 * 0.50) + (0.20 * 0.50) + (0.20 * 0.50) - 0.10\", \"step_by_step\": \"0.280 + 0.125 + 0.100 + 0.100 - 0.10 = 0.505 -> UNVERIFIED (50%)\", \"final_score\": 0.505}, \"reasoning\": \"Marked UNVERIFIED. While trade outlets discuss Leo in early development, Seven Screen Studio has not officially confirmed Christmas 2027.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Makers of Chhaava confirm immediate shelving due to budget disputes\n\nRetrieved Live Evidence:\n[1] Bollywood Hungama (Date: Recent): Maddock Films denies shelving rumours; Chhaava remains actively on schedule with Vicky Kaushal.\n[2] Sacnilk (Date: Recent): Reports claiming cancellation of Chhaava are baseless."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Makers of Chhaava confirm immediate shelving due to budget disputes\", \"category\": \"movie_announcement\", \"entities\": {\"movie\": \"Chhaava\", \"person\": \"Vicky Kaushal\", \"production_house\": \"Maddock Films\", \"date\": null, \"platform\": null, \"amount\": null}, \"verdict\": \"FALSE\", \"confidence\": 0.538, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Latest credible trade coverage directly refutes the assertion.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"contradicts\"}, {\"index\": 2, \"stance\": \"contradicts\"}], \"calculation\": {\"source_authority\": 0.88, \"entity_feasibility\": 0.88, \"timeline_feasibility\": 0.9, \"temporal_recency\": 0.9, \"dispute_penalty\": 0.35, \"formula\": \"Score = (0.35 * 0.88) + (0.25 * 0.88) + (0.20 * 0.90) + (0.20 * 0.90) - 0.35\", \"step_by_step\": \"0.308 + 0.220 + 0.180 + 0.180 - 0.35 = 0.538 -> FALSE (54%)\", \"final_score\": 0.538}, \"reasoning\": \"Rated FALSE. Recent mainstream trade reports directly contradict this assertion.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Makers officially cancel theatrical run of War 2 for direct digital premiere\n\nRetrieved Live Evidence:\n[1] The Hindu (Date: Recent): Yash Raj Films confirms War 2 remains locked for a wide worldwide theatrical release prior to Amazon Prime Video streaming window.\n[2] Bollywood Hungama (Date: Recent): Talks over post-theatrical Amazon Prime Video OTT rights were misquoted online as a direct-to-digital release."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Makers officially cancel theatrical run of War 2 for direct digital premiere\", \"category\": \"release_update\", \"entities\": {\"movie\": \"War 2\", \"person\": \"Hrithik Roshan, Jr NTR\", \"production_house\": \"Yash Raj Films\", \"date\": null, \"platform\": \"Amazon Prime Video\", \"amount\": null}, \"verdict\": \"MISLEADING\", \"confidence\": 0.474, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Assertion twists an accurate partial fact or deal discussion out of context, distorting the real outcome.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"contradicts\"}, {\"index\": 2, \"stance\": \"neutral\"}], \"calculation\": {\"source_authority\": 0.84, \"entity_feasibility\": 0.8, \"timeline_feasibility\": 0.5, \"temporal_recency\": 0.5, \"dispute_penalty\": 0.22, \"formula\": \"Score = (0.35 * 0.84) + (0.25 * 0.80) + (0.20 * 0.50) + (0.20 * 0.50) - 0.22\", \"step_by_step\": \"0.294 + 0.200 + 0.100 + 0.100 - 0.22 = 0.474 -> MISLEADING (47%)\", \"final_score\": 0.474}, \"reasoning\": \"Classified as MISLEADING. While partial sub-details existed in early coverage, War 2 did not suffer the distorted outcome claimed.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Makers of Dangal confirm immediate shelving due to budget disputes\n\nRetrieved Live Evidence:\n[1] Bollywood Hungama (Date: Recent): Aamir Khan Productions denies shelving rumours; Dangal remains actively on schedule with Aamir Khan.\n[2] Sacnilk (Date: Recent): Reports claiming cancellation of Dangal are baseless."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Makers of Dangal confirm immediate shelving due to budget disputes\", \"category\": \"movie_announcement\", \"entities\": {\"movie\": \"Dangal\", \"person\": \"Aamir Khan\", \"production_house\": \"Aamir Khan Productions\", \"date\": null, \"platform\": null, \"amount\": null}, \"verdict\": \"FALSE\", \"confidence\": 0.538, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Latest credible trade coverage directly refutes the assertion.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"contradicts\"}, {\"index\": 2, \"stance\": \"contradicts\"}], \"calculation\": {\"source_authority\": 0.88, \"entity_feasibility\": 0.88, \"timeline_feasibility\": 0.9, \"temporal_recency\": 0.9, \"dispute_penalty\": 0.35, \"formula\": \"Score = (0.35 * 0.88) + (0.25 * 0.88) + (0.20 * 0.90) + (0.20 * 0.90) - 0.35\", \"step_by_step\": \"0.308 + 0.220 + 0.180 + 0.180 - 0.35 = 0.538 -> FALSE (54%)\", \"final_score\": 0.538}, \"reasoning\": \"Rated FALSE. Recent mainstream trade reports directly contradict this assertion.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Viral claim: Trade confirms Dangal is a box office disaster losing distributors money\n\nRetrieved Live Evidence:\n[1] Sacnilk (Date: Recent): Dangal opened slower in a single sub-circuit before rebounding strongly across worldwide markets to reach ₹2,070 Crore.\n[2] Pinkvilla (Date: Recent): Select regional reports cited modest Day 1 morning occupancy, which social media spun out of context despite strong final numbers."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Viral claim: Trade confirms Dangal is a box office disaster losing distributors money\", \"category\": \"box_office\", \"entities\": {\"movie\": \"Dangal\", \"person\": \"Aamir Khan\", \"production_house\": \"Aamir Khan Productions\", \"date\": null, \"platform\": null, \"amount\": null}, \"verdict\": \"MISLEADING\", \"confidence\": 0.474, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Assertion twists an accurate partial fact or deal discussion out of context, distorting the real outcome.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"contradicts\"}, {\"index\": 2, \"stance\": \"neutral\"}], \"calculation\": {\"source_authority\": 0.84, \"entity_feasibility\": 0.8, \"timeline_feasibility\": 0.5, \"temporal_recency\": 0.5, \"dispute_penalty\": 0.22, \"formula\": \"Score = (0.35 * 0.84) + (0.25 * 0.80) + (0.20 * 0.50) + (0.20 * 0.50) - 0.22\", \"step_by_step\": \"0.294 + 0.200 + 0.100 + 0.100 - 0.22 = 0.474 -> MISLEADING (47%)\", \"final_score\": 0.474}, \"reasoning\": \"Classified as MISLEADING. While partial sub-details existed in early coverage, Dangal did not suffer the distorted outcome claimed.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Salaar: Part 1 - Ceasefire confirmed to feature surprise cameo by Kamal Haasan and release Clash on Diwali.\n\nRetrieved Live Evidence:\n[1] Koimoi (Date: Recent): Social media fan handles speculate on unconfirmed cameos in Salaar: Part 1 - Ceasefire.\n[2] Times of India (Date: Recent): No official confirmation yet from Hombale Films regarding festival clashes or guest roles."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Salaar: Part 1 - Ceasefire will feature a cameo by Kamal Haasan and clash on Diwali.\", \"category\": \"casting\", \"entities\": {\"movie\": \"Salaar: Part 1 - Ceasefire\", \"person\": \"Kamal Haasan\", \"production_house\": \"Hombale Films\", \"date\": \"Diwali\", \"platform\": null, \"amount\": null}, \"verdict\": \"UNVERIFIED\", \"confidence\": 0.42, \"claim_timeframe\": \"future\", \"temporal_verdict_rule\": \"Lack of authoritative trade corroboration or production confirmation leaves claim unverified.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"neutral\"}, {\"index\": 2, \"stance\": \"neutral\"}], \"calculation\": {\"source_authority\": 0.62, \"entity_feasibility\": 0.48, \"timeline_feasibility\": 0.5, \"temporal_recency\": 0.5, \"dispute_penalty\": 0.1, \"formula\": \"Score = (0.35 * 0.62) + (0.25 * 0.48) + (0.20 * 0.50) + (0.20 * 0.50) - 0.10\", \"step_by_step\": \"0.217 + 0.120 + 0.100 + 0.100 - 0.10 = 0.437 -> UNVERIFIED (44%)\", \"final_score\": 0.437}, \"reasoning\": \"Marked UNVERIFIED. Social media speculation regarding Salaar: Part 1 - Ceasefire lacks confirmation from makers Hombale Films or Tier-1 trade trackers.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Jailer directed by Nelson Dilipkumar starring Rajinikanth begins official production under Sun Pictures.\n\nRetrieved Live Evidence:\n[1] The Times of India (Date: Recent): Nelson Dilipkumar and Rajinikanth commence shooting key sequences for Jailer.\n[2] India Today (Date: Recent): Sun Pictures confirms active schedule for Jailer featuring Rajinikanth."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Jailer starring Rajinikanth has commenced official filming under Sun Pictures.\", \"category\": \"movie_announcement\", \"entities\": {\"movie\": \"Jailer\", \"person\": \"Rajinikanth\", \"production_house\": \"Sun Pictures\", \"date\": \"Current\", \"platform\": null, \"amount\": null}, \"verdict\": \"TRUE\", \"confidence\": 0.9, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Corroborated by multiple mainstream entertainment desks citing ongoing filming.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.85, \"entity_feasibility\": 0.94, \"timeline_feasibility\": 0.92, \"temporal_recency\": 0.92, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.85) + (0.25 * 0.94) + (0.20 * 0.92) + (0.20 * 0.92) - 0.00\", \"step_by_step\": \"0.297 + 0.235 + 0.184 + 0.184 - 0.00 = 0.900 -> TRUE (90%)\", \"final_score\": 0.9}, \"reasoning\": \"Confirmed TRUE. Reporting from The Times of India and India Today verifies that Nelson Dilipkumar's Jailer with Rajinikanth is actively filming.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Fact check needed — Maddock Films producing Chhaava directed by Laxman Utekar?\n\nRetrieved Live Evidence:\n[1] Hindustan Times (Date: Recent): Maddock Films and Laxman Utekar headline Chhaava (Historical epic sensation).\n[2] Sacnilk (Date: Recent): Industry records list Chhaava under Maddock Films with Laxman Utekar."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Chhaava is produced by Maddock Films and directed by Laxman Utekar (Historical epic sensation).\", \"category\": \"movie_announcement\", \"entities\": {\"movie\": \"Chhaava\", \"person\": \"Laxman Utekar, Vicky Kaushal\", \"production_house\": \"Maddock Films\", \"date\": \"Current\", \"platform\": null, \"amount\": null}, \"verdict\": \"TRUE\", \"confidence\": 0.898, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Verified directly against mainstream entertainment and trade profiles.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.88, \"entity_feasibility\": 0.92, \"timeline_feasibility\": 0.9, \"temporal_recency\": 0.9, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.88) + (0.25 * 0.92) + (0.20 * 0.90) + (0.20 * 0.90) - 0.00\", \"step_by_step\": \"0.308 + 0.230 + 0.180 + 0.180 - 0.00 = 0.898 -> TRUE (90%)\", \"final_score\": 0.898}, \"reasoning\": \"Confirmed TRUE. Authoritative sources verify Chhaava with Laxman Utekar under Maddock Films.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Fact check needed — Hombale Films producing Salaar: Part 1 - Ceasefire directed by Prashanth Neel?\n\nRetrieved Live Evidence:\n[1] Hindustan Times (Date: Recent): Hombale Films and Prashanth Neel headline Salaar: Part 1 - Ceasefire (SIIMA Popular Action Winner).\n[2] Sacnilk (Date: Recent): Industry records list Salaar: Part 1 - Ceasefire under Hombale Films with Prashanth Neel."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Salaar: Part 1 - Ceasefire is produced by Hombale Films and directed by Prashanth Neel (SIIMA Popular Action Winner).\", \"category\": \"movie_announcement\", \"entities\": {\"movie\": \"Salaar: Part 1 - Ceasefire\", \"person\": \"Prashanth Neel, Prabhas\", \"production_house\": \"Hombale Films\", \"date\": \"Current\", \"platform\": null, \"amount\": null}, \"verdict\": \"TRUE\", \"confidence\": 0.898, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Verified directly against mainstream entertainment and trade profiles.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.88, \"entity_feasibility\": 0.92, \"timeline_feasibility\": 0.9, \"temporal_recency\": 0.9, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.88) + (0.25 * 0.92) + (0.20 * 0.90) + (0.20 * 0.90) - 0.00\", \"step_by_step\": \"0.308 + 0.230 + 0.180 + 0.180 - 0.00 = 0.898 -> TRUE (90%)\", \"final_score\": 0.898}, \"reasoning\": \"Confirmed TRUE. Authoritative sources verify Salaar: Part 1 - Ceasefire with Prashanth Neel under Hombale Films.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Dangal locked its digital OTT streaming premiere on Netflix.\n\nRetrieved Live Evidence:\n[1] The Indian Express (Date: Recent): Dangal officially arrives for digital streaming on Netflix on 2017.\n[2] Film Companion (Date: Recent): Streaming rights for Aamir Khan's Dangal confirmed with Netflix."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Dangal is streaming on Netflix.\", \"category\": \"release_update\", \"entities\": {\"movie\": \"Dangal\", \"person\": \"Aamir Khan\", \"production_house\": \"Aamir Khan Productions\", \"date\": \"2017\", \"platform\": \"Netflix\", \"amount\": null}, \"verdict\": \"TRUE\", \"confidence\": 0.918, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Verified digital premiere disclosure on Netflix (2017).\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.9, \"entity_feasibility\": 0.94, \"timeline_feasibility\": 0.92, \"temporal_recency\": 0.92, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.90) + (0.25 * 0.94) + (0.20 * 0.92) + (0.20 * 0.92) - 0.00\", \"step_by_step\": \"0.315 + 0.235 + 0.184 + 0.184 - 0.00 = 0.918 -> TRUE (92%)\", \"final_score\": 0.918}, \"reasoning\": \"Confirmed TRUE. Both The Indian Express and Film Companion verify that Dangal officially premiered on Netflix.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Chhaava directed by Laxman Utekar starring Vicky Kaushal begins official production under Maddock Films.\n\nRetrieved Live Evidence:\n[1] The Times of India (Date: Recent): Laxman Utekar and Vicky Kaushal commence shooting key sequences for Chhaava.\n[2] India Today (Date: Recent): Maddock Films confirms active schedule for Chhaava featuring Vicky Kaushal."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Chhaava starring Vicky Kaushal has commenced official filming under Maddock Films.\", \"category\": \"movie_announcement\", \"entities\": {\"movie\": \"Chhaava\", \"person\": \"Vicky Kaushal\", \"production_house\": \"Maddock Films\", \"date\": \"Current\", \"platform\": null, \"amount\": null}, \"verdict\": \"TRUE\", \"confidence\": 0.9, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Corroborated by multiple mainstream entertainment desks citing ongoing filming.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.85, \"entity_feasibility\": 0.94, \"timeline_feasibility\": 0.92, \"temporal_recency\": 0.92, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.85) + (0.25 * 0.94) + (0.20 * 0.92) + (0.20 * 0.92) - 0.00\", \"step_by_step\": \"0.297 + 0.235 + 0.184 + 0.184 - 0.00 = 0.900 -> TRUE (90%)\", \"final_score\": 0.9}, \"reasoning\": \"Confirmed TRUE. Reporting from The Times of India and India Today verifies that Laxman Utekar's Chhaava with Vicky Kaushal is actively filming.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Viral claim: Trade confirms Salaar: Part 1 - Ceasefire is a box office disaster losing distributors money\n\nRetrieved Live Evidence:\n[1] Sacnilk (Date: Recent): Salaar: Part 1 - Ceasefire opened slower in a single sub-circuit before rebounding strongly across worldwide markets to reach ₹715 Crore.\n[2] Pinkvilla (Date: Recent): Select regional reports cited modest Day 1 morning occupancy, which social media spun out of context despite strong final numbers."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Viral claim: Trade confirms Salaar: Part 1 - Ceasefire is a box office disaster losing distributors money\", \"category\": \"box_office\", \"entities\": {\"movie\": \"Salaar: Part 1 - Ceasefire\", \"person\": \"Prabhas\", \"production_house\": \"Hombale Films\", \"date\": null, \"platform\": null, \"amount\": null}, \"verdict\": \"MISLEADING\", \"confidence\": 0.474, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Assertion twists an accurate partial fact or deal discussion out of context, distorting the real outcome.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"contradicts\"}, {\"index\": 2, \"stance\": \"neutral\"}], \"calculation\": {\"source_authority\": 0.84, \"entity_feasibility\": 0.8, \"timeline_feasibility\": 0.5, \"temporal_recency\": 0.5, \"dispute_penalty\": 0.22, \"formula\": \"Score = (0.35 * 0.84) + (0.25 * 0.80) + (0.20 * 0.50) + (0.20 * 0.50) - 0.22\", \"step_by_step\": \"0.294 + 0.200 + 0.100 + 0.100 - 0.22 = 0.474 -> MISLEADING (47%)\", \"final_score\": 0.474}, \"reasoning\": \"Classified as MISLEADING. While partial sub-details existed in early coverage, Salaar: Part 1 - Ceasefire did not suffer the distorted outcome claimed.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Jailer releasing on Christmas 2027\n\nRetrieved Live Evidence:\n[1] The Indian Express (Date: Recent): Speculation around Jailer continues, though Sun Pictures has not locked any Christmas 2027 release date.\n[2] Pinkvilla (Date: Recent): Pre-production on Jailer remains early with no official release window confirmed."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Jailer will release on Christmas 2027.\", \"category\": \"release_update\", \"entities\": {\"movie\": \"Jailer\", \"person\": \"Rajinikanth\", \"production_house\": \"Sun Pictures\", \"date\": \"Christmas 2027\", \"platform\": null, \"amount\": null}, \"verdict\": \"UNVERIFIED\", \"confidence\": 0.44, \"claim_timeframe\": \"future\", \"temporal_verdict_rule\": \"Exact title 'Jailer' preserved; no official confirmation supports the speculated Christmas 2027 date.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"neutral\"}, {\"index\": 2, \"stance\": \"neutral\"}], \"calculation\": {\"source_authority\": 0.8, \"entity_feasibility\": 0.5, \"timeline_feasibility\": 0.5, \"temporal_recency\": 0.5, \"dispute_penalty\": 0.1, \"formula\": \"Score = (0.35 * 0.80) + (0.25 * 0.50) + (0.20 * 0.50) + (0.20 * 0.50) - 0.10\", \"step_by_step\": \"0.280 + 0.125 + 0.100 + 0.100 - 0.10 = 0.505 -> UNVERIFIED (50%)\", \"final_score\": 0.505}, \"reasoning\": \"Marked UNVERIFIED. While trade outlets discuss Jailer in early development, Sun Pictures has not officially confirmed Christmas 2027.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Latest update check: did Salaar: Part 1 - Ceasefire earn awards recognition (SIIMA Popular Action Winner)?\n\nRetrieved Live Evidence:\n[1] Hindustan Times (Date: Recent): Hombale Films and Prashanth Neel headline Salaar: Part 1 - Ceasefire (SIIMA Popular Action Winner).\n[2] Sacnilk (Date: Recent): Industry records list Salaar: Part 1 - Ceasefire under Hombale Films with Prashanth Neel."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Salaar: Part 1 - Ceasefire is associated with SIIMA Popular Action Winner.\", \"category\": \"movie_announcement\", \"entities\": {\"movie\": \"Salaar: Part 1 - Ceasefire\", \"person\": \"Prashanth Neel, Prabhas\", \"production_house\": \"Hombale Films\", \"date\": \"Current\", \"platform\": null, \"amount\": null}, \"verdict\": \"TRUE\", \"confidence\": 0.898, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Verified directly against mainstream entertainment and trade profiles.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.88, \"entity_feasibility\": 0.92, \"timeline_feasibility\": 0.9, \"temporal_recency\": 0.9, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.88) + (0.25 * 0.92) + (0.20 * 0.90) + (0.20 * 0.90) - 0.00\", \"step_by_step\": \"0.308 + 0.230 + 0.180 + 0.180 - 0.00 = 0.898 -> TRUE (90%)\", \"final_score\": 0.898}, \"reasoning\": \"Confirmed TRUE. Authoritative sources verify Salaar: Part 1 - Ceasefire with Prashanth Neel under Hombale Films.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Chhaava confirmed to feature surprise cameo by Kamal Haasan and release Clash on Diwali.\n\nRetrieved Live Evidence:\n[1] Koimoi (Date: Recent): Social media fan handles speculate on unconfirmed cameos in Chhaava.\n[2] Times of India (Date: Recent): No official confirmation yet from Maddock Films regarding festival clashes or guest roles."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Chhaava will feature a cameo by Kamal Haasan and clash on Diwali.\", \"category\": \"casting\", \"entities\": {\"movie\": \"Chhaava\", \"person\": \"Kamal Haasan\", \"production_house\": \"Maddock Films\", \"date\": \"Diwali\", \"platform\": null, \"amount\": null}, \"verdict\": \"UNVERIFIED\", \"confidence\": 0.42, \"claim_timeframe\": \"future\", \"temporal_verdict_rule\": \"Lack of authoritative trade corroboration or production confirmation leaves claim unverified.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"neutral\"}, {\"index\": 2, \"stance\": \"neutral\"}], \"calculation\": {\"source_authority\": 0.62, \"entity_feasibility\": 0.48, \"timeline_feasibility\": 0.5, \"temporal_recency\": 0.5, \"dispute_penalty\": 0.1, \"formula\": \"Score = (0.35 * 0.62) + (0.25 * 0.48) + (0.20 * 0.50) + (0.20 * 0.50) - 0.10\", \"step_by_step\": \"0.217 + 0.120 + 0.100 + 0.100 - 0.10 = 0.437 -> UNVERIFIED (44%)\", \"final_score\": 0.437}, \"reasoning\": \"Marked UNVERIFIED. Social media speculation regarding Chhaava lacks confirmation from makers Maddock Films or Tier-1 trade trackers.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Trade clash: one report says Chhaava collected ₹600 Crore while another claims ₹790 Crore. Is one fake?\n\nRetrieved Live Evidence:\n[1] Sacnilk (Date: Lifetime): Chhaava closes India Net collection at ₹600 Crore (excluding taxes).\n[2] Bollywood Hungama (Date: Lifetime): Chhaava achieves ₹790 Crore Worldwide Gross including overseas territories."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Chhaava collection figures of ₹600 Crore and ₹790 Crore reflect conflicting box office metrics.\", \"category\": \"box_office\", \"entities\": {\"movie\": \"Chhaava\", \"person\": \"Vicky Kaushal\", \"production_house\": \"Maddock Films\", \"date\": \"Lifetime\", \"platform\": null, \"amount\": \"₹600 Crore / ₹790 Crore\"}, \"verdict\": \"PARTIALLY_TRUE\", \"confidence\": 0.824, \"claim_timeframe\": \"lifetime\", \"temporal_verdict_rule\": \"Neither figure is fabricated. Comparing India Net (tax-excluded domestic) directly with Worldwide Gross causes apparent discrepancy.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.92, \"entity_feasibility\": 0.92, \"timeline_feasibility\": 0.88, \"temporal_recency\": 0.88, \"dispute_penalty\": 0.08, \"formula\": \"Score = (0.35 * 0.92) + (0.25 * 0.92) + (0.20 * 0.88) + (0.20 * 0.88) - 0.08\", \"step_by_step\": \"0.322 + 0.230 + 0.176 + 0.176 - 0.08 = 0.824 -> PARTIALLY_TRUE (82%)\", \"final_score\": 0.824}, \"reasoning\": \"Assessed as PARTIALLY TRUE. Both numbers for Chhaava are valid trade metrics: ₹600 Crore represents India Net earnings, whereas ₹790 Crore represents total Worldwide Gross.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: War 2 directed by Ayan Mukerji starring Hrithik Roshan, Jr NTR begins official production under Yash Raj Films.\n\nRetrieved Live Evidence:\n[1] The Times of India (Date: Recent): Ayan Mukerji and Hrithik Roshan, Jr NTR commence shooting key sequences for War 2.\n[2] India Today (Date: Recent): Yash Raj Films confirms active schedule for War 2 featuring Hrithik Roshan, Jr NTR."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"War 2 starring Hrithik Roshan, Jr NTR has commenced official filming under Yash Raj Films.\", \"category\": \"movie_announcement\", \"entities\": {\"movie\": \"War 2\", \"person\": \"Hrithik Roshan, Jr NTR\", \"production_house\": \"Yash Raj Films\", \"date\": \"Current\", \"platform\": null, \"amount\": null}, \"verdict\": \"TRUE\", \"confidence\": 0.9, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Corroborated by multiple mainstream entertainment desks citing ongoing filming.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.85, \"entity_feasibility\": 0.94, \"timeline_feasibility\": 0.92, \"temporal_recency\": 0.92, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.85) + (0.25 * 0.94) + (0.20 * 0.92) + (0.20 * 0.92) - 0.00\", \"step_by_step\": \"0.297 + 0.235 + 0.184 + 0.184 - 0.00 = 0.900 -> TRUE (90%)\", \"final_score\": 0.9}, \"reasoning\": \"Confirmed TRUE. Reporting from The Times of India and India Today verifies that Ayan Mukerji's War 2 with Hrithik Roshan, Jr NTR is actively filming.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Viral claim: Trade confirms Jailer is a box office disaster losing distributors money\n\nRetrieved Live Evidence:\n[1] Sacnilk (Date: Recent): Jailer opened slower in a single sub-circuit before rebounding strongly across worldwide markets to reach ₹650 Crore.\n[2] Pinkvilla (Date: Recent): Select regional reports cited modest Day 1 morning occupancy, which social media spun out of context despite strong final numbers."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Viral claim: Trade confirms Jailer is a box office disaster losing distributors money\", \"category\": \"box_office\", \"entities\": {\"movie\": \"Jailer\", \"person\": \"Rajinikanth\", \"production_house\": \"Sun Pictures\", \"date\": null, \"platform\": null, \"amount\": null}, \"verdict\": \"MISLEADING\", \"confidence\": 0.474, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Assertion twists an accurate partial fact or deal discussion out of context, distorting the real outcome.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"contradicts\"}, {\"index\": 2, \"stance\": \"neutral\"}], \"calculation\": {\"source_authority\": 0.84, \"entity_feasibility\": 0.8, \"timeline_feasibility\": 0.5, \"temporal_recency\": 0.5, \"dispute_penalty\": 0.22, \"formula\": \"Score = (0.35 * 0.84) + (0.25 * 0.80) + (0.20 * 0.50) + (0.20 * 0.50) - 0.22\", \"step_by_step\": \"0.294 + 0.200 + 0.100 + 0.100 - 0.22 = 0.474 -> MISLEADING (47%)\", \"final_score\": 0.474}, \"reasoning\": \"Classified as MISLEADING. While partial sub-details existed in early coverage, Jailer did not suffer the distorted outcome claimed.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Has Leo crossed ₹500 Crore worldwide? Older news said ₹510 Crore.\n\nRetrieved Live Evidence:\n[1] Sacnilk (Date: Day 10): Leo worldwide collection stands at ₹510 Crore gross after ten days.\n[2] Bollywood Hungama (Date: Lifetime): Leo starring Thalapathy Vijay officially crosses ₹500 Crore milestone, reaching ₹615 Crore worldwide."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Leo has surpassed ₹500 Crore at the worldwide box office.\", \"category\": \"box_office\", \"entities\": {\"movie\": \"Leo\", \"person\": \"Thalapathy Vijay\", \"production_house\": \"Seven Screen Studio\", \"date\": \"Current\", \"platform\": null, \"amount\": \"₹500 Crore\"}, \"verdict\": \"TRUE\", \"confidence\": 0.937, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Day 10 reporting (₹510 Crore) was accurate at the time of publication and is not misleading, but newer official trade tracking confirms Leo reached ₹615 Crore, exceeding ₹500 Crore.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"neutral\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.92, \"entity_feasibility\": 0.95, \"timeline_feasibility\": 0.94, \"temporal_recency\": 0.95, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.92) + (0.25 * 0.95) + (0.20 * 0.94) + (0.20 * 0.95) - 0.00\", \"step_by_step\": \"0.322 + 0.237 + 0.188 + 0.190 - 0.00 = 0.937 -> TRUE (94%)\", \"final_score\": 0.937}, \"reasoning\": \"Confirmed TRUE. While earlier Day 10 dispatches accurately reported ₹510 Crore, subsequent theatrical runs carried Leo past ₹500 Crore to ₹615 Crore worldwide.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Latest update check: did Chhaava earn awards recognition (Historical epic sensation)?\n\nRetrieved Live Evidence:\n[1] Hindustan Times (Date: Recent): Maddock Films and Laxman Utekar headline Chhaava (Historical epic sensation).\n[2] Sacnilk (Date: Recent): Industry records list Chhaava under Maddock Films with Laxman Utekar."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Chhaava is associated with Historical epic sensation.\", \"category\": \"movie_announcement\", \"entities\": {\"movie\": \"Chhaava\", \"person\": \"Laxman Utekar, Vicky Kaushal\", \"production_house\": \"Maddock Films\", \"date\": \"Current\", \"platform\": null, \"amount\": null}, \"verdict\": \"TRUE\", \"confidence\": 0.898, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Verified directly against mainstream entertainment and trade profiles.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.88, \"entity_feasibility\": 0.92, \"timeline_feasibility\": 0.9, \"temporal_recency\": 0.9, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.88) + (0.25 * 0.92) + (0.20 * 0.90) + (0.20 * 0.90) - 0.00\", \"step_by_step\": \"0.308 + 0.230 + 0.180 + 0.180 - 0.00 = 0.898 -> TRUE (90%)\", \"final_score\": 0.898}, \"reasoning\": \"Confirmed TRUE. Authoritative sources verify Chhaava with Laxman Utekar under Maddock Films.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Makers of Leo confirm immediate shelving due to budget disputes\n\nRetrieved Live Evidence:\n[1] Bollywood Hungama (Date: Recent): Seven Screen Studio denies shelving rumours; Leo remains actively on schedule with Thalapathy Vijay.\n[2] Sacnilk (Date: Recent): Reports claiming cancellation of Leo are baseless."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Makers of Leo confirm immediate shelving due to budget disputes\", \"category\": \"movie_announcement\", \"entities\": {\"movie\": \"Leo\", \"person\": \"Thalapathy Vijay\", \"production_house\": \"Seven Screen Studio\", \"date\": null, \"platform\": null, \"amount\": null}, \"verdict\": \"FALSE\", \"confidence\": 0.538, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Latest credible trade coverage directly refutes the assertion.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"contradicts\"}, {\"index\": 2, \"stance\": \"contradicts\"}], \"calculation\": {\"source_authority\": 0.88, \"entity_feasibility\": 0.88, \"timeline_feasibility\": 0.9, \"temporal_recency\": 0.9, \"dispute_penalty\": 0.35, \"formula\": \"Score = (0.35 * 0.88) + (0.25 * 0.88) + (0.20 * 0.90) + (0.20 * 0.90) - 0.35\", \"step_by_step\": \"0.308 + 0.220 + 0.180 + 0.180 - 0.35 = 0.538 -> FALSE (54%)\", \"final_score\": 0.538}, \"reasoning\": \"Rated FALSE. Recent mainstream trade reports directly contradict this assertion.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: War 2 locked its digital OTT streaming premiere on Amazon Prime Video.\n\nRetrieved Live Evidence:\n[1] The Indian Express (Date: Recent): War 2 officially arrives for digital streaming on Amazon Prime Video on Late 2025.\n[2] Film Companion (Date: Recent): Streaming rights for Hrithik Roshan, Jr NTR's War 2 confirmed with Amazon Prime Video."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"War 2 is streaming on Amazon Prime Video.\", \"category\": \"release_update\", \"entities\": {\"movie\": \"War 2\", \"person\": \"Hrithik Roshan, Jr NTR\", \"production_house\": \"Yash Raj Films\", \"date\": \"Late 2025\", \"platform\": \"Amazon Prime Video\", \"amount\": null}, \"verdict\": \"TRUE\", \"confidence\": 0.918, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Verified digital premiere disclosure on Amazon Prime Video (Late 2025).\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.9, \"entity_feasibility\": 0.94, \"timeline_feasibility\": 0.92, \"temporal_recency\": 0.92, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.90) + (0.25 * 0.94) + (0.20 * 0.92) + (0.20 * 0.92) - 0.00\", \"step_by_step\": \"0.315 + 0.235 + 0.184 + 0.184 - 0.00 = 0.918 -> TRUE (92%)\", \"final_score\": 0.918}, \"reasoning\": \"Confirmed TRUE. Both The Indian Express and Film Companion verify that War 2 officially premiered on Amazon Prime Video.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Latest update check: did War 2 earn awards recognition (YRF Spy Universe installment)?\n\nRetrieved Live Evidence:\n[1] Hindustan Times (Date: Recent): Yash Raj Films and Ayan Mukerji headline War 2 (YRF Spy Universe installment).\n[2] Sacnilk (Date: Recent): Industry records list War 2 under Yash Raj Films with Ayan Mukerji."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"War 2 is associated with YRF Spy Universe installment.\", \"category\": \"movie_announcement\", \"entities\": {\"movie\": \"War 2\", \"person\": \"Ayan Mukerji, Hrithik Roshan, Jr NTR\", \"production_house\": \"Yash Raj Films\", \"date\": \"Current\", \"platform\": null, \"amount\": null}, \"verdict\": \"TRUE\", \"confidence\": 0.898, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Verified directly against mainstream entertainment and trade profiles.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.88, \"entity_feasibility\": 0.92, \"timeline_feasibility\": 0.9, \"temporal_recency\": 0.9, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.88) + (0.25 * 0.92) + (0.20 * 0.90) + (0.20 * 0.90) - 0.00\", \"step_by_step\": \"0.308 + 0.230 + 0.180 + 0.180 - 0.00 = 0.898 -> TRUE (90%)\", \"final_score\": 0.898}, \"reasoning\": \"Confirmed TRUE. Authoritative sources verify War 2 with Ayan Mukerji under Yash Raj Films.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Latest update check: did Leo earn awards recognition (Top Tamil grosser 2023)?\n\nRetrieved Live Evidence:\n[1] Hindustan Times (Date: Recent): Seven Screen Studio and Lokesh Kanagaraj headline Leo (Top Tamil grosser 2023).\n[2] Sacnilk (Date: Recent): Industry records list Leo under Seven Screen Studio with Lokesh Kanagaraj."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Leo is associated with Top Tamil grosser 2023.\", \"category\": \"movie_announcement\", \"entities\": {\"movie\": \"Leo\", \"person\": \"Lokesh Kanagaraj, Thalapathy Vijay\", \"production_house\": \"Seven Screen Studio\", \"date\": \"Current\", \"platform\": null, \"amount\": null}, \"verdict\": \"TRUE\", \"confidence\": 0.898, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Verified directly against mainstream entertainment and trade profiles.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.88, \"entity_feasibility\": 0.92, \"timeline_feasibility\": 0.9, \"temporal_recency\": 0.9, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.88) + (0.25 * 0.92) + (0.20 * 0.90) + (0.20 * 0.90) - 0.00\", \"step_by_step\": \"0.308 + 0.230 + 0.180 + 0.180 - 0.00 = 0.898 -> TRUE (90%)\", \"final_score\": 0.898}, \"reasoning\": \"Confirmed TRUE. Authoritative sources verify Leo with Lokesh Kanagaraj under Seven Screen Studio.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Salaar: Part 1 - Ceasefire locked its digital OTT streaming premiere on Netflix & Disney+ Hotstar.\n\nRetrieved Live Evidence:\n[1] The Indian Express (Date: Recent): Salaar: Part 1 - Ceasefire officially arrives for digital streaming on Netflix & Disney+ Hotstar on January 20, 2024.\n[2] Film Companion (Date: Recent): Streaming rights for Prabhas's Salaar: Part 1 - Ceasefire confirmed with Netflix & Disney+ Hotstar."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Salaar: Part 1 - Ceasefire is streaming on Netflix & Disney+ Hotstar.\", \"category\": \"release_update\", \"entities\": {\"movie\": \"Salaar: Part 1 - Ceasefire\", \"person\": \"Prabhas\", \"production_house\": \"Hombale Films\", \"date\": \"January 20, 2024\", \"platform\": \"Netflix & Disney+ Hotstar\", \"amount\": null}, \"verdict\": \"TRUE\", \"confidence\": 0.918, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Verified digital premiere disclosure on Netflix & Disney+ Hotstar (January 20, 2024).\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.9, \"entity_feasibility\": 0.94, \"timeline_feasibility\": 0.92, \"temporal_recency\": 0.92, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.90) + (0.25 * 0.94) + (0.20 * 0.92) + (0.20 * 0.92) - 0.00\", \"step_by_step\": \"0.315 + 0.235 + 0.184 + 0.184 - 0.00 = 0.918 -> TRUE (92%)\", \"final_score\": 0.918}, \"reasoning\": \"Confirmed TRUE. Both The Indian Express and Film Companion verify that Salaar: Part 1 - Ceasefire officially premiered on Netflix & Disney+ Hotstar.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Chhaava directed by Laxman Utekar is releasing on December 6, 2024.\n\nRetrieved Live Evidence:\n[1] The Hindu (Date: Older Announcement): Makers initially eyed December 6, 2024 for Chhaava.\n[2] Hindustan Times (Date: Updated Schedule): Maddock Films officially confirmed Chhaava postponed to February 14, 2025."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Chhaava directed by Laxman Utekar will release on December 6, 2024.\", \"category\": \"release_update\", \"entities\": {\"movie\": \"Chhaava\", \"person\": \"Vicky Kaushal\", \"production_house\": \"Maddock Films\", \"date\": \"December 6, 2024\", \"platform\": null, \"amount\": null}, \"verdict\": \"OUTDATED\", \"confidence\": 0.453, \"claim_timeframe\": \"superseded_historical\", \"temporal_verdict_rule\": \"The December 6, 2024 window was superseded by newer official production schedules moving Chhaava to February 14, 2025.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"neutral\"}, {\"index\": 2, \"stance\": \"contradicts\"}], \"calculation\": {\"source_authority\": 0.88, \"entity_feasibility\": 0.9, \"timeline_feasibility\": 0.45, \"temporal_recency\": 0.4, \"dispute_penalty\": 0.25, \"formula\": \"Score = (0.35 * 0.88) + (0.25 * 0.90) + (0.20 * 0.45) + (0.20 * 0.40) - 0.25\", \"step_by_step\": \"0.308 + 0.225 + 0.090 + 0.080 - 0.25 = 0.453 -> OUTDATED (45%)\", \"final_score\": 0.453}, \"reasoning\": \"Evaluated as OUTDATED. While Maddock Films initially considered December 6, 2024, updated official disclosures locked February 14, 2025 as the final release date.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Chhaava locked its digital OTT streaming premiere on Netflix.\n\nRetrieved Live Evidence:\n[1] The Indian Express (Date: Recent): Chhaava officially arrives for digital streaming on Netflix on April 11, 2025.\n[2] Film Companion (Date: Recent): Streaming rights for Vicky Kaushal's Chhaava confirmed with Netflix."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Chhaava is streaming on Netflix.\", \"category\": \"release_update\", \"entities\": {\"movie\": \"Chhaava\", \"person\": \"Vicky Kaushal\", \"production_house\": \"Maddock Films\", \"date\": \"April 11, 2025\", \"platform\": \"Netflix\", \"amount\": null}, \"verdict\": \"TRUE\", \"confidence\": 0.918, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Verified digital premiere disclosure on Netflix (April 11, 2025).\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.9, \"entity_feasibility\": 0.94, \"timeline_feasibility\": 0.92, \"temporal_recency\": 0.92, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.90) + (0.25 * 0.94) + (0.20 * 0.92) + (0.20 * 0.92) - 0.00\", \"step_by_step\": \"0.315 + 0.235 + 0.184 + 0.184 - 0.00 = 0.918 -> TRUE (92%)\", \"final_score\": 0.918}, \"reasoning\": \"Confirmed TRUE. Both The Indian Express and Film Companion verify that Chhaava officially premiered on Netflix.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Salaar: Part 1 - Ceasefire directed by Prashanth Neel starring Prabhas begins official production under Hombale Films.\n\nRetrieved Live Evidence:\n[1] The Times of India (Date: Recent): Prashanth Neel and Prabhas commence shooting key sequences for Salaar: Part 1 - Ceasefire.\n[2] India Today (Date: Recent): Hombale Films confirms active schedule for Salaar: Part 1 - Ceasefire featuring Prabhas."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Salaar: Part 1 - Ceasefire starring Prabhas has commenced official filming under Hombale Films.\", \"category\": \"movie_announcement\", \"entities\": {\"movie\": \"Salaar: Part 1 - Ceasefire\", \"person\": \"Prabhas\", \"production_house\": \"Hombale Films\", \"date\": \"Current\", \"platform\": null, \"amount\": null}, \"verdict\": \"TRUE\", \"confidence\": 0.9, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Corroborated by multiple mainstream entertainment desks citing ongoing filming.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.85, \"entity_feasibility\": 0.94, \"timeline_feasibility\": 0.92, \"temporal_recency\": 0.92, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.85) + (0.25 * 0.94) + (0.20 * 0.92) + (0.20 * 0.92) - 0.00\", \"step_by_step\": \"0.297 + 0.235 + 0.184 + 0.184 - 0.00 = 0.900 -> TRUE (90%)\", \"final_score\": 0.9}, \"reasoning\": \"Confirmed TRUE. Reporting from The Times of India and India Today verifies that Prashanth Neel's Salaar: Part 1 - Ceasefire with Prabhas is actively filming.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Makers of Salaar: Part 1 - Ceasefire confirm immediate shelving due to budget disputes\n\nRetrieved Live Evidence:\n[1] Bollywood Hungama (Date: Recent): Hombale Films denies shelving rumours; Salaar: Part 1 - Ceasefire remains actively on schedule with Prabhas.\n[2] Sacnilk (Date: Recent): Reports claiming cancellation of Salaar: Part 1 - Ceasefire are baseless."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Makers of Salaar: Part 1 - Ceasefire confirm immediate shelving due to budget disputes\", \"category\": \"movie_announcement\", \"entities\": {\"movie\": \"Salaar: Part 1 - Ceasefire\", \"person\": \"Prabhas\", \"production_house\": \"Hombale Films\", \"date\": null, \"platform\": null, \"amount\": null}, \"verdict\": \"FALSE\", \"confidence\": 0.538, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Latest credible trade coverage directly refutes the assertion.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"contradicts\"}, {\"index\": 2, \"stance\": \"contradicts\"}], \"calculation\": {\"source_authority\": 0.88, \"entity_feasibility\": 0.88, \"timeline_feasibility\": 0.9, \"temporal_recency\": 0.9, \"dispute_penalty\": 0.35, \"formula\": \"Score = (0.35 * 0.88) + (0.25 * 0.88) + (0.20 * 0.90) + (0.20 * 0.90) - 0.35\", \"step_by_step\": \"0.308 + 0.220 + 0.180 + 0.180 - 0.35 = 0.538 -> FALSE (54%)\", \"final_score\": 0.538}, \"reasoning\": \"Rated FALSE. Recent mainstream trade reports directly contradict this assertion.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Leo confirmed to feature surprise cameo by Kamal Haasan and release Clash on Diwali.\n\nRetrieved Live Evidence:\n[1] Koimoi (Date: Recent): Social media fan handles speculate on unconfirmed cameos in Leo.\n[2] Times of India (Date: Recent): No official confirmation yet from Seven Screen Studio regarding festival clashes or guest roles."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Leo will feature a cameo by Kamal Haasan and clash on Diwali.\", \"category\": \"casting\", \"entities\": {\"movie\": \"Leo\", \"person\": \"Kamal Haasan\", \"production_house\": \"Seven Screen Studio\", \"date\": \"Diwali\", \"platform\": null, \"amount\": null}, \"verdict\": \"UNVERIFIED\", \"confidence\": 0.42, \"claim_timeframe\": \"future\", \"temporal_verdict_rule\": \"Lack of authoritative trade corroboration or production confirmation leaves claim unverified.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"neutral\"}, {\"index\": 2, \"stance\": \"neutral\"}], \"calculation\": {\"source_authority\": 0.62, \"entity_feasibility\": 0.48, \"timeline_feasibility\": 0.5, \"temporal_recency\": 0.5, \"dispute_penalty\": 0.1, \"formula\": \"Score = (0.35 * 0.62) + (0.25 * 0.48) + (0.20 * 0.50) + (0.20 * 0.50) - 0.10\", \"step_by_step\": \"0.217 + 0.120 + 0.100 + 0.100 - 0.10 = 0.437 -> UNVERIFIED (44%)\", \"final_score\": 0.437}, \"reasoning\": \"Marked UNVERIFIED. Social media speculation regarding Leo lacks confirmation from makers Seven Screen Studio or Tier-1 trade trackers.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Has Chhaava crossed ₹500 Crore worldwide? Older news said ₹430 Crore.\n\nRetrieved Live Evidence:\n[1] Sacnilk (Date: Day 10): Chhaava worldwide collection stands at ₹430 Crore gross after ten days.\n[2] Bollywood Hungama (Date: Lifetime): Chhaava starring Vicky Kaushal officially crosses ₹500 Crore milestone, reaching ₹790 Crore worldwide."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Chhaava has surpassed ₹500 Crore at the worldwide box office.\", \"category\": \"box_office\", \"entities\": {\"movie\": \"Chhaava\", \"person\": \"Vicky Kaushal\", \"production_house\": \"Maddock Films\", \"date\": \"Current\", \"platform\": null, \"amount\": \"₹500 Crore\"}, \"verdict\": \"TRUE\", \"confidence\": 0.937, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Day 10 reporting (₹430 Crore) was accurate at the time of publication and is not misleading, but newer official trade tracking confirms Chhaava reached ₹790 Crore, exceeding ₹500 Crore.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"neutral\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.92, \"entity_feasibility\": 0.95, \"timeline_feasibility\": 0.94, \"temporal_recency\": 0.95, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.92) + (0.25 * 0.95) + (0.20 * 0.94) + (0.20 * 0.95) - 0.00\", \"step_by_step\": \"0.322 + 0.237 + 0.188 + 0.190 - 0.00 = 0.937 -> TRUE (94%)\", \"final_score\": 0.937}, \"reasoning\": \"Confirmed TRUE. While earlier Day 10 dispatches accurately reported ₹430 Crore, subsequent theatrical runs carried Chhaava past ₹500 Crore to ₹790 Crore worldwide.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Makers of War 2 confirm immediate shelving due to budget disputes\n\nRetrieved Live Evidence:\n[1] Bollywood Hungama (Date: Recent): Yash Raj Films denies shelving rumours; War 2 remains actively on schedule with Hrithik Roshan, Jr NTR.\n[2] Sacnilk (Date: Recent): Reports claiming cancellation of War 2 are baseless."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Makers of War 2 confirm immediate shelving due to budget disputes\", \"category\": \"movie_announcement\", \"entities\": {\"movie\": \"War 2\", \"person\": \"Hrithik Roshan, Jr NTR\", \"production_house\": \"Yash Raj Films\", \"date\": null, \"platform\": null, \"amount\": null}, \"verdict\": \"FALSE\", \"confidence\": 0.538, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Latest credible trade coverage directly refutes the assertion.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"contradicts\"}, {\"index\": 2, \"stance\": \"contradicts\"}], \"calculation\": {\"source_authority\": 0.88, \"entity_feasibility\": 0.88, \"timeline_feasibility\": 0.9, \"temporal_recency\": 0.9, \"dispute_penalty\": 0.35, \"formula\": \"Score = (0.35 * 0.88) + (0.25 * 0.88) + (0.20 * 0.90) + (0.20 * 0.90) - 0.35\", \"step_by_step\": \"0.308 + 0.220 + 0.180 + 0.180 - 0.35 = 0.538 -> FALSE (54%)\", \"final_score\": 0.538}, \"reasoning\": \"Rated FALSE. Recent mainstream trade reports directly contradict this assertion.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Leo directed by Lokesh Kanagaraj starring Thalapathy Vijay begins official production under Seven Screen Studio.\n\nRetrieved Live Evidence:\n[1] The Times of India (Date: Recent): Lokesh Kanagaraj and Thalapathy Vijay commence shooting key sequences for Leo.\n[2] India Today (Date: Recent): Seven Screen Studio confirms active schedule for Leo featuring Thalapathy Vijay."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Leo starring Thalapathy Vijay has commenced official filming under Seven Screen Studio.\", \"category\": \"movie_announcement\", \"entities\": {\"movie\": \"Leo\", \"person\": \"Thalapathy Vijay\", \"production_house\": \"Seven Screen Studio\", \"date\": \"Current\", \"platform\": null, \"amount\": null}, \"verdict\": \"TRUE\", \"confidence\": 0.9, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Corroborated by multiple mainstream entertainment desks citing ongoing filming.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.85, \"entity_feasibility\": 0.94, \"timeline_feasibility\": 0.92, \"temporal_recency\": 0.92, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.85) + (0.25 * 0.94) + (0.20 * 0.92) + (0.20 * 0.92) - 0.00\", \"step_by_step\": \"0.297 + 0.235 + 0.184 + 0.184 - 0.00 = 0.900 -> TRUE (90%)\", \"final_score\": 0.9}, \"reasoning\": \"Confirmed TRUE. Reporting from The Times of India and India Today verifies that Lokesh Kanagaraj's Leo with Thalapathy Vijay is actively filming.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Trade clash: one report says Dangal collected ₹387 Crore while another claims ₹2,070 Crore. Is one fake?\n\nRetrieved Live Evidence:\n[1] Sacnilk (Date: Lifetime): Dangal closes India Net collection at ₹387 Crore (excluding taxes).\n[2] Bollywood Hungama (Date: Lifetime): Dangal achieves ₹2,070 Crore Worldwide Gross including overseas territories."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Dangal collection figures of ₹387 Crore and ₹2,070 Crore reflect conflicting box office metrics.\", \"category\": \"box_office\", \"entities\": {\"movie\": \"Dangal\", \"person\": \"Aamir Khan\", \"production_house\": \"Aamir Khan Productions\", \"date\": \"Lifetime\", \"platform\": null, \"amount\": \"₹387 Crore / ₹2,070 Crore\"}, \"verdict\": \"PARTIALLY_TRUE\", \"confidence\": 0.824, \"claim_timeframe\": \"lifetime\", \"temporal_verdict_rule\": \"Neither figure is fabricated. Comparing India Net (tax-excluded domestic) directly with Worldwide Gross causes apparent discrepancy.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.92, \"entity_feasibility\": 0.92, \"timeline_feasibility\": 0.88, \"temporal_recency\": 0.88, \"dispute_penalty\": 0.08, \"formula\": \"Score = (0.35 * 0.92) + (0.25 * 0.92) + (0.20 * 0.88) + (0.20 * 0.88) - 0.08\", \"step_by_step\": \"0.322 + 0.230 + 0.176 + 0.176 - 0.08 = 0.824 -> PARTIALLY_TRUE (82%)\", \"final_score\": 0.824}, \"reasoning\": \"Assessed as PARTIALLY TRUE. Both numbers for Dangal are valid trade metrics: ₹387 Crore represents India Net earnings, whereas ₹2,070 Crore represents total Worldwide Gross.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Fact check needed — Seven Screen Studio producing Leo directed by Lokesh Kanagaraj?\n\nRetrieved Live Evidence:\n[1] Hindustan Times (Date: Recent): Seven Screen Studio and Lokesh Kanagaraj headline Leo (Top Tamil grosser 2023).\n[2] Sacnilk (Date: Recent): Industry records list Leo under Seven Screen Studio with Lokesh Kanagaraj."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Leo is produced by Seven Screen Studio and directed by Lokesh Kanagaraj (Top Tamil grosser 2023).\", \"category\": \"movie_announcement\", \"entities\": {\"movie\": \"Leo\", \"person\": \"Lokesh Kanagaraj, Thalapathy Vijay\", \"production_house\": \"Seven Screen Studio\", \"date\": \"Current\", \"platform\": null, \"amount\": null}, \"verdict\": \"TRUE\", \"confidence\": 0.898, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Verified directly against mainstream entertainment and trade profiles.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.88, \"entity_feasibility\": 0.92, \"timeline_feasibility\": 0.9, \"temporal_recency\": 0.9, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.88) + (0.25 * 0.92) + (0.20 * 0.90) + (0.20 * 0.90) - 0.00\", \"step_by_step\": \"0.308 + 0.230 + 0.180 + 0.180 - 0.00 = 0.898 -> TRUE (90%)\", \"final_score\": 0.898}, \"reasoning\": \"Confirmed TRUE. Authoritative sources verify Leo with Lokesh Kanagaraj under Seven Screen Studio.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Viral claim: Trade confirms Leo is a box office disaster losing distributors money\n\nRetrieved Live Evidence:\n[1] Sacnilk (Date: Recent): Leo opened slower in a single sub-circuit before rebounding strongly across worldwide markets to reach ₹615 Crore.\n[2] Pinkvilla (Date: Recent): Select regional reports cited modest Day 1 morning occupancy, which social media spun out of context despite strong final numbers."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Viral claim: Trade confirms Leo is a box office disaster losing distributors money\", \"category\": \"box_office\", \"entities\": {\"movie\": \"Leo\", \"person\": \"Thalapathy Vijay\", \"production_house\": \"Seven Screen Studio\", \"date\": null, \"platform\": null, \"amount\": null}, \"verdict\": \"MISLEADING\", \"confidence\": 0.474, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Assertion twists an accurate partial fact or deal discussion out of context, distorting the real outcome.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"contradicts\"}, {\"index\": 2, \"stance\": \"neutral\"}], \"calculation\": {\"source_authority\": 0.84, \"entity_feasibility\": 0.8, \"timeline_feasibility\": 0.5, \"temporal_recency\": 0.5, \"dispute_penalty\": 0.22, \"formula\": \"Score = (0.35 * 0.84) + (0.25 * 0.80) + (0.20 * 0.50) + (0.20 * 0.50) - 0.22\", \"step_by_step\": \"0.294 + 0.200 + 0.100 + 0.100 - 0.22 = 0.474 -> MISLEADING (47%)\", \"final_score\": 0.474}, \"reasoning\": \"Classified as MISLEADING. While partial sub-details existed in early coverage, Leo did not suffer the distorted outcome claimed.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Did Dangal cross ₹1,000 Crore on Day 10?\n\nRetrieved Live Evidence:\n[1] Sacnilk (Date: Day 10): Dangal earned ₹480 Crore worldwide gross up to Day 10.\n[2] Ormax Media (Date: Day 14): Dangal crossed ₹1,000 Crore later in its theatrical run before reaching ₹2,070 Crore."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Dangal crossed ₹1,000 Crore worldwide on or before Day 10.\", \"category\": \"box_office\", \"entities\": {\"movie\": \"Dangal\", \"person\": \"Aamir Khan\", \"production_house\": \"Aamir Khan Productions\", \"date\": \"Day 10\", \"platform\": null, \"amount\": \"₹1,000 Crore\"}, \"verdict\": \"FALSE\", \"confidence\": 0.561, \"claim_timeframe\": \"historical\", \"temporal_verdict_rule\": \"The claim asserts achievement by Day 10. Official Day 10 trade tallies stood at ₹480 Crore, below ₹1,000 Crore; the milestone occurred later.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"contradicts\"}, {\"index\": 2, \"stance\": \"contradicts\"}], \"calculation\": {\"source_authority\": 0.92, \"entity_feasibility\": 0.9, \"timeline_feasibility\": 0.92, \"temporal_recency\": 0.9, \"dispute_penalty\": 0.35, \"formula\": \"Score = (0.35 * 0.92) + (0.25 * 0.90) + (0.20 * 0.92) + (0.20 * 0.90) - 0.35\", \"step_by_step\": \"0.322 + 0.225 + 0.184 + 0.180 - 0.35 = 0.561 -> FALSE (56%)\", \"final_score\": 0.561}, \"reasoning\": \"Rated FALSE for the specified Day 10 constraint. Trade records show Dangal stood at ₹480 Crore on Day 10 before crossing ₹1,000 Crore on subsequent days.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Has Salaar: Part 1 - Ceasefire crossed ₹500 Crore worldwide? Older news said ₹615 Crore.\n\nRetrieved Live Evidence:\n[1] Sacnilk (Date: Day 10): Salaar: Part 1 - Ceasefire worldwide collection stands at ₹615 Crore gross after ten days.\n[2] Bollywood Hungama (Date: Lifetime): Salaar: Part 1 - Ceasefire starring Prabhas officially crosses ₹500 Crore milestone, reaching ₹715 Crore worldwide."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Salaar: Part 1 - Ceasefire has surpassed ₹500 Crore at the worldwide box office.\", \"category\": \"box_office\", \"entities\": {\"movie\": \"Salaar: Part 1 - Ceasefire\", \"person\": \"Prabhas\", \"production_house\": \"Hombale Films\", \"date\": \"Current\", \"platform\": null, \"amount\": \"₹500 Crore\"}, \"verdict\": \"TRUE\", \"confidence\": 0.937, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Day 10 reporting (₹615 Crore) was accurate at the time of publication and is not misleading, but newer official trade tracking confirms Salaar: Part 1 - Ceasefire reached ₹715 Crore, exceeding ₹500 Crore.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"neutral\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.92, \"entity_feasibility\": 0.95, \"timeline_feasibility\": 0.94, \"temporal_recency\": 0.95, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.92) + (0.25 * 0.95) + (0.20 * 0.94) + (0.20 * 0.95) - 0.00\", \"step_by_step\": \"0.322 + 0.237 + 0.188 + 0.190 - 0.00 = 0.937 -> TRUE (94%)\", \"final_score\": 0.937}, \"reasoning\": \"Confirmed TRUE. While earlier Day 10 dispatches accurately reported ₹615 Crore, subsequent theatrical runs carried Salaar: Part 1 - Ceasefire past ₹500 Crore to ₹715 Crore worldwide.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Makers of Jailer confirm immediate shelving due to budget disputes\n\nRetrieved Live Evidence:\n[1] Bollywood Hungama (Date: Recent): Sun Pictures denies shelving rumours; Jailer remains actively on schedule with Rajinikanth.\n[2] Sacnilk (Date: Recent): Reports claiming cancellation of Jailer are baseless."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Makers of Jailer confirm immediate shelving due to budget disputes\", \"category\": \"movie_announcement\", \"entities\": {\"movie\": \"Jailer\", \"person\": \"Rajinikanth\", \"production_house\": \"Sun Pictures\", \"date\": null, \"platform\": null, \"amount\": null}, \"verdict\": \"FALSE\", \"confidence\": 0.538, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Latest credible trade coverage directly refutes the assertion.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"contradicts\"}, {\"index\": 2, \"stance\": \"contradicts\"}], \"calculation\": {\"source_authority\": 0.88, \"entity_feasibility\": 0.88, \"timeline_feasibility\": 0.9, \"temporal_recency\": 0.9, \"dispute_penalty\": 0.35, \"formula\": \"Score = (0.35 * 0.88) + (0.25 * 0.88) + (0.20 * 0.90) + (0.20 * 0.90) - 0.35\", \"step_by_step\": \"0.308 + 0.220 + 0.180 + 0.180 - 0.35 = 0.538 -> FALSE (54%)\", \"final_score\": 0.538}, \"reasoning\": \"Rated FALSE. Recent mainstream trade reports directly contradict this assertion.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Trade clash: one report says Jailer collected ₹348 Crore while another claims ₹650 Crore. Is one fake?\n\nRetrieved Live Evidence:\n[1] Sacnilk (Date: Lifetime): Jailer closes India Net collection at ₹348 Crore (excluding taxes).\n[2] Bollywood Hungama (Date: Lifetime): Jailer achieves ₹650 Crore Worldwide Gross including overseas territories."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Jailer collection figures of ₹348 Crore and ₹650 Crore reflect conflicting box office metrics.\", \"category\": \"box_office\", \"entities\": {\"movie\": \"Jailer\", \"person\": \"Rajinikanth\", \"production_house\": \"Sun Pictures\", \"date\": \"Lifetime\", \"platform\": null, \"amount\": \"₹348 Crore / ₹650 Crore\"}, \"verdict\": \"PARTIALLY_TRUE\", \"confidence\": 0.824, \"claim_timeframe\": \"lifetime\", \"temporal_verdict_rule\": \"Neither figure is fabricated. Comparing India Net (tax-excluded domestic) directly with Worldwide Gross causes apparent discrepancy.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.92, \"entity_feasibility\": 0.92, \"timeline_feasibility\": 0.88, \"temporal_recency\": 0.88, \"dispute_penalty\": 0.08, \"formula\": \"Score = (0.35 * 0.92) + (0.25 * 0.92) + (0.20 * 0.88) + (0.20 * 0.88) - 0.08\", \"step_by_step\": \"0.322 + 0.230 + 0.176 + 0.176 - 0.08 = 0.824 -> PARTIALLY_TRUE (82%)\", \"final_score\": 0.824}, \"reasoning\": \"Assessed as PARTIALLY TRUE. Both numbers for Jailer are valid trade metrics: ₹348 Crore represents India Net earnings, whereas ₹650 Crore represents total Worldwide Gross.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Jailer locked its digital OTT streaming premiere on Amazon Prime Video.\n\nRetrieved Live Evidence:\n[1] The Indian Express (Date: Recent): Jailer officially arrives for digital streaming on Amazon Prime Video on September 7, 2023.\n[2] Film Companion (Date: Recent): Streaming rights for Rajinikanth's Jailer confirmed with Amazon Prime Video."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Jailer is streaming on Amazon Prime Video.\", \"category\": \"release_update\", \"entities\": {\"movie\": \"Jailer\", \"person\": \"Rajinikanth\", \"production_house\": \"Sun Pictures\", \"date\": \"September 7, 2023\", \"platform\": \"Amazon Prime Video\", \"amount\": null}, \"verdict\": \"TRUE\", \"confidence\": 0.918, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Verified digital premiere disclosure on Amazon Prime Video (September 7, 2023).\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.9, \"entity_feasibility\": 0.94, \"timeline_feasibility\": 0.92, \"temporal_recency\": 0.92, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.90) + (0.25 * 0.94) + (0.20 * 0.92) + (0.20 * 0.92) - 0.00\", \"step_by_step\": \"0.315 + 0.235 + 0.184 + 0.184 - 0.00 = 0.918 -> TRUE (92%)\", \"final_score\": 0.918}, \"reasoning\": \"Confirmed TRUE. Both The Indian Express and Film Companion verify that Jailer officially premiered on Amazon Prime Video.\"}"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are CineVerify-AI, an expert Indian cinema fact-checking model trained on temporal reasoning and source evaluation. Evaluate the Claim STRICTLY using the Retrieved Live Evidence passages and chronological dates provided. Preserve exact movie titles, sequel numbers, and actors from the claim without inventing unrelated titles. Output structured verification analysis with mathematical breakdown in valid JSON."
+      },
+      {
+        "role": "user",
+        "content": "Claim: Fact check needed — Sun Pictures producing Jailer directed by Nelson Dilipkumar?\n\nRetrieved Live Evidence:\n[1] Hindustan Times (Date: Recent): Sun Pictures and Nelson Dilipkumar headline Jailer (Tamil Blockbuster of 2023).\n[2] Sacnilk (Date: Recent): Industry records list Jailer under Sun Pictures with Nelson Dilipkumar."
+      },
+      {
+        "role": "assistant",
+        "content": "{\"core_claim\": \"Jailer is produced by Sun Pictures and directed by Nelson Dilipkumar (Tamil Blockbuster of 2023).\", \"category\": \"movie_announcement\", \"entities\": {\"movie\": \"Jailer\", \"person\": \"Nelson Dilipkumar, Rajinikanth\", \"production_house\": \"Sun Pictures\", \"date\": \"Current\", \"platform\": null, \"amount\": null}, \"verdict\": \"TRUE\", \"confidence\": 0.898, \"claim_timeframe\": \"current\", \"temporal_verdict_rule\": \"Verified directly against mainstream entertainment and trade profiles.\", \"evidence_stances\": [{\"index\": 1, \"stance\": \"supports\"}, {\"index\": 2, \"stance\": \"supports\"}], \"calculation\": {\"source_authority\": 0.88, \"entity_feasibility\": 0.92, \"timeline_feasibility\": 0.9, \"temporal_recency\": 0.9, \"dispute_penalty\": 0.0, \"formula\": \"Score = (0.35 * 0.88) + (0.25 * 0.92) + (0.20 * 0.90) + (0.20 * 0.90) - 0.00\", \"step_by_step\": \"0.308 + 0.230 + 0.180 + 0.180 - 0.00 = 0.898 -> TRUE (90%)\", \"final_score\": 0.898}, \"reasoning\": \"Confirmed TRUE. Authoritative sources verify Jailer with Nelson Dilipkumar under Sun Pictures.\"}"
+      }
+    ]
+  }
+]

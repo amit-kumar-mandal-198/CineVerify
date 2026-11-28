@@ -68,18 +68,18 @@ const BENCHMARK_SAMPLES: ReadonlyArray<BenchmarkSample> = [
 const PIPELINE_ARCHITECTURE = [
   {
     component: "Claim Extraction & Entities",
-    model: "Gemini Flash-Lite + Heuristic Fallback",
-    role: "Normalizes headlines/URLs into core assertions & 6 entity slots",
+    model: "CineVerify-Core-3B SLM (Ollama) + Guardrails",
+    role: "Normalizes headlines/URLs into core assertions & 6 entity slots locally",
   },
   {
-    component: "Semantic Chunk Ranking",
-    model: "sentence-transformers/all-MiniLM-L6-v2",
-    role: "Ranks article paragraphs by claim similarity before NLI",
+    component: "Live Evidence Retrieval",
+    model: "Zero-Key Trade RSS + MiniLM-L6-v2 Ranker",
+    role: "Fetches live Indian cinema sources and ranks relevant article passages",
   },
   {
-    component: "Stance Verification (NLI)",
-    model: "cross-encoder/nli-deberta-v3-base",
-    role: "Scores Supports / Contradicts / Neutral with headline & date context",
+    component: "Grounded NLI & Temporal Reasoning",
+    model: "CineVerify-Core-3B SLM (Unified Engine)",
+    role: "Evaluates Supports / Contradicts / Neutral stances and timeline evolution",
   },
   {
     component: "History Storage",

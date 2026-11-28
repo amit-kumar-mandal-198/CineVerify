@@ -1,4 +1,4 @@
-"""Claim extraction, entity recognition, and category classification (owned by Member 1)."""
+"""Claim extraction, entity recognition, and category classification powered by local SLM."""
 
 from __future__ import annotations
 
@@ -11,16 +11,9 @@ from typing import Any, Optional
 from urllib.parse import urlparse
 
 import trafilatura
-from google.genai import types
 
-from app.core.models_config import (
-    GEMINI_FALLBACK_MODELS,
-    GEMINI_MODEL_NAME,
-    create_gemini_client,
-    has_valid_gemini_key,
-)
-from app.core.prompts import CLAIM_EXTRACTION_PROMPT
 from app.schemas.claim import ClaimCategory, ClaimResult, ExtractedEntities, InputType
+from app.services.cineverify_slm import _heuristic_entities, extract_claim_with_slm
 
 logger = logging.getLogger(__name__)
 
@@ -58,60 +51,46 @@ def _is_disallowed_ip(ip_str: str) -> bool:
 
 
 def _validate_public_url(url: str) -> str:
-    """Validate HTTP(S) URL syntax and block local/private SSRF targets."""
-    target = url.strip()
-    parsed = urlparse(target)
-    if parsed.scheme.lower() not in {"http", "https"} or not parsed.hostname:
-        raise ValueError("Please provide a valid URL starting with http:// or https://.")
+    """Ensure URL uses http(s), has a resolvable host, and does not point to internal resources."""
+    parsed = urlparse(url.strip())
+    if parsed.scheme not in ("http", "https"):
+        raise ValueError("URL must use http or https.")
 
-    hostname = parsed.hostname.lower().rstrip(".")
-    if (
-        hostname in _BLOCKED_HOSTNAMES
-        or hostname.endswith(".local")
-        or hostname.endswith(".internal")
-    ):
-        raise ValueError("Local or internal URLs are not permitted for verification.")
+    hostname = (parsed.hostname or "").strip().lower()
+    if not hostname:
+        raise ValueError("URL must include a valid host.")
 
-    try:
-        ipaddress.ip_address(hostname)
-        if _is_disallowed_ip(hostname):
-            raise ValueError("Private or loopback IP addresses are not permitted.")
-        return target
-    except ValueError as exc:
-        if "not permitted" in str(exc):
-            raise
+    if hostname in _BLOCKED_HOSTNAMES or hostname.endswith(".localhost"):
+        raise ValueError("Access to local addresses is prohibited.")
+
+    if any(hostname == domain or hostname.endswith(f".{domain}") for domain in _SOCIAL_DOMAINS):
+        raise ValueError(
+            f"Social media URLs ({hostname}) cannot be scraped directly. "
+            "Please paste the text or headline of the post instead."
+        )
 
     try:
-        infos = socket.getaddrinfo(hostname, None)
-        for info in infos:
-            resolved_ip = info[4][0]
-            if _is_disallowed_ip(resolved_ip):
-                raise ValueError("URL resolves to a restricted network address.")
-    except socket.gaierror:
-        pass
+        addr_info = socket.getaddrinfo(hostname, None, proto=socket.IPPROTO_TCP)
+    except socket.gaierror as exc:
+        raise ValueError(f"Could not resolve host '{hostname}': check the URL or your network connection.") from exc
 
-    return target
+    resolved_ips = {item[4][0] for item in addr_info if item[4]}
+    if not resolved_ips:
+        raise ValueError(f"Could not resolve an IP address for host '{hostname}'.")
 
+    for ip_str in resolved_ips:
+        if _is_disallowed_ip(ip_str):
+            raise ValueError(f"URL resolves to a disallowed private address ({ip_str}).")
 
-def _is_social_domain(url: str) -> bool:
-    hostname = (urlparse(url).hostname or "").lower()
-    if hostname.startswith("www."):
-        hostname = hostname[4:]
-    return any(hostname == d or hostname.endswith(f".{d}") for d in _SOCIAL_DOMAINS)
+    return parsed.geturl()
 
 
 def _extract_url_content(url: str) -> str:
-    """Fetch a webpage and extract its title and main body text for claim analysis."""
-    target_url = _validate_public_url(url)
-    downloaded = trafilatura.fetch_url(target_url)
+    """Fetch a public webpage and extract readable article text."""
+    safe_url = _validate_public_url(url)
+    downloaded = trafilatura.fetch_url(safe_url)
     if not downloaded:
-        if _is_social_domain(target_url):
-            raise ValueError(
-                "Social media links often block automated reading. Please copy and paste the post text or headline in Headline mode."
-            )
-        raise ValueError(
-            "Unable to fetch readable content from that URL (the site may block automated requests or require JavaScript). Try pasting the headline instead."
-        )
+        raise ValueError(f"Failed to fetch content from URL: {safe_url}")
 
     extracted_text = trafilatura.extract(
         downloaded,
@@ -123,21 +102,10 @@ def _extract_url_content(url: str) -> str:
     body = (extracted_text or "").strip()
 
     if not title and not body:
-        raise ValueError(
-            "Could not extract readable article text from that URL. Please paste the headline or excerpt directly in Headline mode."
-        )
+        raise ValueError(f"Could not extract readable article text from URL: {safe_url}")
 
     combined = f"{title}\n\n{body}".strip() if title and body else (title or body)
     return combined[:_MAX_URL_TEXT_CHARS]
-
-
-def _strip_json_fences(raw_text: str) -> str:
-    """Remove optional markdown code fences surrounding a JSON response."""
-    cleaned = raw_text.strip()
-    fence_match = re.match(r"^```(?:json)?\s*(.*?)\s*```$", cleaned, flags=re.DOTALL | re.IGNORECASE)
-    if fence_match:
-        return fence_match.group(1).strip()
-    return cleaned
 
 
 def _coerce_optional_str(value: Any) -> Optional[str]:
@@ -145,21 +113,19 @@ def _coerce_optional_str(value: Any) -> Optional[str]:
     if value is None:
         return None
     text = str(value).strip()
-    if not text or text.lower() in {"null", "none", "n/a"}:
-        return None
-    return text
+    return text if text else None
 
 
-def _coerce_category(raw_category: Any, fallback_text: str) -> ClaimCategory:
-    """Map LLM category output into ClaimCategory with keyword-based fallback."""
-    if isinstance(raw_category, str):
+def _coerce_category(raw_category: Optional[str], fallback_text: str = "") -> ClaimCategory:
+    """Map string values or heuristics to ClaimCategory enum members."""
+    if raw_category:
         normalized = raw_category.strip().lower().replace(" ", "_")
-        for member in ClaimCategory:
-            if member.value == normalized:
-                return member
+        for candidate in ClaimCategory:
+            if candidate.value == normalized:
+                return candidate
 
     lowered = fallback_text.lower()
-    if any(kw in lowered for kw in ("crore", "box office", "collection", "gross", "nett")):
+    if any(kw in lowered for kw in ("box office", "crore", "collection", "gross", "net", "b/o", "record")):
         return ClaimCategory.BOX_OFFICE
     if any(kw in lowered for kw in ("release", "releasing", "postponed", "ott", "netflix", "prime video")):
         return ClaimCategory.RELEASE_UPDATE
@@ -168,83 +134,53 @@ def _coerce_category(raw_category: Any, fallback_text: str) -> ClaimCategory:
     return ClaimCategory.MOVIE_ANNOUNCEMENT
 
 
-def _build_fallback_result(submitted_claim: str, input_text: str) -> ClaimResult:
-    """Construct a safe fallback ClaimResult when Gemini is unavailable or returns invalid JSON."""
+def _build_heuristic_result(submitted_claim: str, input_text: str) -> ClaimResult:
+    """Construct a safe entity-preserving ClaimResult when Ollama is offline."""
     first_line = next((line.strip() for line in input_text.splitlines() if line.strip()), submitted_claim.strip())
     core_claim = first_line[:240]
+    heur = _heuristic_entities(core_claim)
     return ClaimResult(
         submitted_claim=submitted_claim,
         core_claim=core_claim,
         category=_coerce_category(None, input_text),
-        entities=ExtractedEntities(),
-    )
-
-
-def _parse_gemini_response(raw_json_text: str, submitted_claim: str, input_text: str) -> ClaimResult:
-    """Parse and validate Gemini JSON output into a ClaimResult schema."""
-    payload = json.loads(_strip_json_fences(raw_json_text))
-    if not isinstance(payload, dict):
-        raise ValueError("Claim extraction JSON payload is not an object.")
-
-    core_claim = _coerce_optional_str(payload.get("core_claim")) or _build_fallback_result(
-        submitted_claim, input_text
-    ).core_claim
-    category = _coerce_category(payload.get("category"), f"{core_claim} {input_text}")
-
-    raw_entities = payload.get("entities")
-    entities_dict = raw_entities if isinstance(raw_entities, dict) else {}
-    entities = ExtractedEntities(
-        movie=_coerce_optional_str(entities_dict.get("movie")),
-        person=_coerce_optional_str(entities_dict.get("person")),
-        production_house=_coerce_optional_str(entities_dict.get("production_house")),
-        date=_coerce_optional_str(entities_dict.get("date")),
-        platform=_coerce_optional_str(entities_dict.get("platform")),
-        amount=_coerce_optional_str(entities_dict.get("amount")),
-    )
-
-    return ClaimResult(
-        submitted_claim=submitted_claim,
-        core_claim=core_claim,
-        category=category,
-        entities=entities,
+        entities=ExtractedEntities(**heur),
     )
 
 
 def extract_claim(raw_input: str, input_type: InputType = InputType.TEXT) -> ClaimResult:
-    """Extract the central factual claim, entities, and category from user input."""
+    """Extract factual claim, entities, and category using 100% local CineVerify SLM."""
     cleaned_input = (raw_input or "").strip()
     if not cleaned_input:
         raise ValueError("Claim input cannot be empty.")
 
     analysis_text = _extract_url_content(cleaned_input) if input_type == InputType.URL else cleaned_input
 
-    if not has_valid_gemini_key():
-        logger.warning("GEMINI_API_KEY is not configured; returning heuristic fallback ClaimResult.")
-        return _build_fallback_result(raw_input, analysis_text)
-
-    prompt = CLAIM_EXTRACTION_PROMPT.format(input_text=analysis_text)
+    # 1. Query Local Fine-Tuned CineVerify SLM (Ollama)
     try:
-        client = create_gemini_client()
-        last_exc: Optional[Exception] = None
-        for model_name in GEMINI_FALLBACK_MODELS:
-            try:
-                response = client.models.generate_content(
-                    model=model_name,
-                    contents=prompt,
-                    config=types.GenerateContentConfig(
-                        response_mime_type="application/json",
-                        temperature=0.1,
-                    ),
-                )
-                response_text = (response.text or "").strip()
-                if not response_text:
-                    raise ValueError(f"Empty response returned by {model_name}.")
-                return _parse_gemini_response(response_text, raw_input, analysis_text)
-            except Exception as model_exc:
-                last_exc = model_exc
-                logger.warning("Gemini extraction failed on %s (%s); trying next.", model_name, model_exc)
-        if last_exc is not None:
-            raise last_exc
+        slm_result = extract_claim_with_slm(analysis_text)
+        if slm_result and isinstance(slm_result, dict):
+            core_claim = _coerce_optional_str(slm_result.get("core_claim")) or analysis_text
+            category = _coerce_category(slm_result.get("category"), f"{core_claim} {analysis_text}")
+
+            raw_entities = slm_result.get("entities", {})
+            entities = ExtractedEntities(
+                movie=_coerce_optional_str(raw_entities.get("movie")),
+                person=_coerce_optional_str(raw_entities.get("person")),
+                production_house=_coerce_optional_str(raw_entities.get("production_house")),
+                date=_coerce_optional_str(raw_entities.get("date")),
+                platform=_coerce_optional_str(raw_entities.get("platform")),
+                amount=_coerce_optional_str(raw_entities.get("amount")),
+            )
+            logger.info("Successfully extracted claim and entities using local CineVerify SLM.")
+            return ClaimResult(
+                submitted_claim=cleaned_input,
+                core_claim=core_claim,
+                category=category,
+                entities=entities,
+                slm_data=slm_result,
+            )
     except Exception as exc:
-        logger.warning("Gemini claim extraction failed (%s); using fallback.", exc)
-        return _build_fallback_result(raw_input, analysis_text)
+        logger.warning("Local SLM extraction encountered an error: %s", exc)
+
+    # 2. Heuristic fallback
+    return _build_heuristic_result(raw_input, analysis_text)

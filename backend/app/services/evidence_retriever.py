@@ -16,7 +16,6 @@ import httpx
 import numpy as np
 from sentence_transformers import SentenceTransformer
 import trafilatura
-from serpapi import GoogleSearch
 
 from app.config import get_source_credibility, settings
 from app.core.models_config import EMBEDDING_MODEL_NAME
@@ -119,48 +118,173 @@ def _save_cache(cache: Dict[str, List[Dict[str, Any]]]) -> None:
         logger.warning("Failed to write SerpAPI cache: %s", exc)
 
 
-def search_web(query: str, num_results: int = 6) -> List[SearchResult]:
-    """Query SerpAPI for India-focused results with in-memory + disk dev cache."""
-    cache_key = f"{query.strip().lower()}::{num_results}"
+def _clean_rss_title(title: str, source_name: Optional[str]) -> str:
+    """Strip trailing ' - Publisher' suffix added by Google News RSS."""
+    cleaned = " ".join(title.split())
+    if source_name and cleaned.endswith(f" - {source_name}"):
+        cleaned = cleaned[: -len(source_name) - 3].strip()
+    return cleaned
+
+
+def _search_rss_sources(query: str, num_results: int = 8) -> List[SearchResult]:
+    """Zero-key, free live web search using Google News RSS and Bing News RSS with real source extraction."""
+    from urllib.parse import parse_qs, quote_plus
+    import xml.etree.ElementTree as ET
+    from bs4 import BeautifulSoup
+
+    results: List[SearchResult] = []
+    seen_urls: set[str] = set()
+    seen_titles: set[str] = set()
+
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+        )
+    }
+
+    # 1. Google News RSS for India (en-IN) — preserves real publisher via <source url="...">
+    try:
+        gnews_url = f"https://news.google.com/rss/search?q={quote_plus(query)}&hl=en-IN&gl=IN&ceid=IN:en"
+        with httpx.Client(timeout=4.5, headers=headers, follow_redirects=True) as client:
+            resp = client.get(gnews_url)
+            if resp.status_code == 200:
+                root = ET.fromstring(resp.text)
+                for item in root.findall(".//item"):
+                    raw_title = (item.findtext("title") or "").strip()
+                    link = (item.findtext("link") or "").strip()
+                    pub_date = (item.findtext("pubDate") or "").strip()
+
+                    source_el = item.find("source")
+                    source_name = (source_el.text or "").strip() if source_el is not None else None
+                    source_url = (source_el.attrib.get("url") or "").strip() if source_el is not None else ""
+                    source_domain = urlparse(source_url).hostname if source_url else None
+
+                    title = _clean_rss_title(raw_title, source_name)
+                    desc_raw = (item.findtext("description") or "").strip()
+                    snippet = ""
+                    if desc_raw:
+                        soup = BeautifulSoup(desc_raw, "html.parser")
+                        snippet = soup.get_text(separator=" ", strip=True)
+                        # Google News description repeats title + publisher; strip duplicate publisher suffix
+                        snippet = _clean_rss_title(snippet, source_name)
+                    if not snippet or len(snippet) < 12 or snippet == title:
+                        snippet = title
+
+                    title_key = title.lower()[:65]
+                    if link and title and link not in seen_urls and title_key not in seen_titles:
+                        seen_urls.add(link)
+                        seen_titles.add(title_key)
+                        results.append(
+                            SearchResult(
+                                title=title,
+                                url=link,
+                                snippet=snippet,
+                                displayed_date=pub_date[:16] if pub_date else None,
+                                source_name=source_name,
+                                source_domain=source_domain,
+                            )
+                        )
+                    if len(results) >= num_results:
+                        break
+    except Exception as exc:
+        logger.debug("Google News RSS search failed: %s", exc)
+
+    # 2. Bing News RSS — extracts real target URL from apiclick wrapper
+    if len(results) < num_results:
+        try:
+            bing_url = f"https://www.bing.com/news/search?q={quote_plus(query)}&format=rss"
+            with httpx.Client(timeout=4.5, headers=headers, follow_redirects=True) as client:
+                resp = client.get(bing_url)
+                if resp.status_code == 200:
+                    root = ET.fromstring(resp.text)
+                    for item in root.findall(".//item"):
+                        title = " ".join((item.findtext("title") or "").split())
+                        raw_link = (item.findtext("link") or "").strip()
+                        desc = " ".join((item.findtext("description") or "").split())
+                        pub_date = (item.findtext("pubDate") or "").strip()
+
+                        real_url = raw_link
+                        if "bing.com/news/apiclick" in raw_link:
+                            qs = parse_qs(urlparse(raw_link).query)
+                            if qs.get("url"):
+                                real_url = qs["url"][0]
+
+                        source_name = None
+                        for child in item:
+                            if child.tag.lower().endswith("source") and child.text:
+                                source_name = child.text.strip()
+                                break
+                        source_domain = urlparse(real_url).hostname if real_url else None
+
+                        title_key = title.lower()[:65]
+                        if real_url and title and real_url not in seen_urls and title_key not in seen_titles:
+                            seen_urls.add(real_url)
+                            seen_titles.add(title_key)
+                            results.append(
+                                SearchResult(
+                                    title=title,
+                                    url=real_url,
+                                    snippet=desc or title,
+                                    displayed_date=pub_date[:16] if pub_date else None,
+                                    source_name=source_name,
+                                    source_domain=source_domain,
+                                )
+                            )
+                        if len(results) >= num_results:
+                            break
+        except Exception as exc:
+            logger.debug("Bing News RSS search failed: %s", exc)
+
+    return results
+
+
+def search_web(query: str, num_results: int = 8) -> List[SearchResult]:
+    """Query zero-key live web search with in-memory + disk dev cache (optional SerpAPI fallback)."""
+    cache_key = f"rss_v2::{query.strip().lower()}::{num_results}"
     cache = _load_cache()
     if cache_key in cache:
         return [SearchResult(**item) for item in cache[cache_key]]
 
-    if not settings.SERPAPI_KEY or settings.SERPAPI_KEY == "your_serpapi_key_here":
-        logger.warning("SERPAPI_KEY not configured; skipping live web search.")
-        return []
-
-    params = {
-        "engine": "google",
-        "q": query,
-        "api_key": settings.SERPAPI_KEY,
-        "num": num_results,
-        "gl": "in",
-        "hl": "en",
-    }
-    raw_response = GoogleSearch(params).get_dict()
-    if "error" in raw_response:
-        logger.error("SerpAPI returned an error: %s", raw_response["error"])
-        return []
-    organic = raw_response.get("organic_results", [])
-
     results: List[SearchResult] = []
-    for item in organic:
-        url = item.get("link")
-        title = item.get("title", "").strip()
-        if not url or not title:
-            continue
-        results.append(
-            SearchResult(
-                title=title,
-                url=url,
-                snippet=(item.get("snippet") or "").strip(),
-                displayed_date=item.get("date"),
-            )
-        )
 
-    cache[cache_key] = [item.model_dump(mode="json") for item in results]
-    _save_cache(cache)
+    # Optional SerpAPI if key is provided and valid
+    if settings.SERPAPI_KEY and settings.SERPAPI_KEY != "your_serpapi_key_here":
+        try:
+            from serpapi import GoogleSearch  # lazy import
+            params = {
+                "engine": "google",
+                "q": query,
+                "api_key": settings.SERPAPI_KEY,
+                "num": num_results,
+                "gl": "in",
+                "hl": "en",
+            }
+            raw_response = GoogleSearch(params).get_dict()
+            if "organic_results" in raw_response:
+                for item in raw_response["organic_results"]:
+                    url = item.get("link")
+                    title = item.get("title", "").strip()
+                    if url and title:
+                        results.append(
+                            SearchResult(
+                                title=title,
+                                url=url,
+                                snippet=(item.get("snippet") or "").strip(),
+                                displayed_date=item.get("date"),
+                            )
+                        )
+        except Exception as exc:
+            logger.warning("SerpAPI lookup failed (%s); switching to zero-key RSS search.", exc)
+
+    # Zero-key live web search
+    if not results:
+        results = _search_rss_sources(query, num_results=num_results)
+
+    if results:
+        cache[cache_key] = [item.model_dump(mode="json") for item in results]
+        _save_cache(cache)
+
     return results
 
 
@@ -185,22 +309,90 @@ def normalize_url(url: str) -> str:
     )
 
 
-def deduplicate_and_rank_results(results: List[SearchResult]) -> List[SearchResult]:
-    """Deduplicate search results by normalized URL and prioritize credible sources."""
+_RSS_STOPWORDS = {
+    "the", "and", "for", "with", "from", "that", "this", "will", "has", "have", "been",
+    "box", "office", "worldwide", "crore", "cr", "film", "movie", "next", "new", "news",
+    "official", "update", "report", "latest", "release", "date", "crossed", "begins",
+    "shooting", "action", "thriller", "releasing", "christmas", "joins", "opposite",
+}
+
+
+def _extract_anchor_terms(claim_result: Optional[ClaimResult]) -> set[str]:
+    """Extract distinctive entity anchor keywords (movie/person names) to filter unrelated RSS noise."""
+    if claim_result is None:
+        return set()
+    parts = [
+        claim_result.entities.movie or "",
+        claim_result.entities.person or "",
+        claim_result.submitted_claim or "",
+        claim_result.core_claim or "",
+    ]
+    tokens = re.findall(r"[a-z0-9]{3,}", " ".join(parts).lower())
+    anchors = {t for t in tokens if t not in _RSS_STOPWORDS and not t.isdigit()}
+    return anchors
+
+
+def _result_credibility(item: SearchResult) -> float:
+    if item.source_domain:
+        score = get_source_credibility(f"https://{item.source_domain}")
+        if score > 0.40:
+            return score
+    return get_source_credibility(item.url)
+
+
+def _relevance_score(item: SearchResult, anchor_terms: set[str], primary_entity: Optional[str] = None) -> float:
+    haystack = f"{item.title} {item.snippet}".lower()
+    if not anchor_terms:
+        return 0.5
+    hay_tokens = set(re.findall(r"[a-z0-9]{3,}", haystack))
+    overlap = len(anchor_terms & hay_tokens) / max(1, min(len(anchor_terms), 4))
+    bonus = 0.0
+    if primary_entity:
+        primary_words = [w for w in re.findall(r"[a-z0-9]{3,}", primary_entity.lower()) if w not in _RSS_STOPWORDS]
+        if primary_words and any(w in haystack for w in primary_words):
+            bonus = 0.5
+    return min(1.5, overlap + bonus)
+
+
+def deduplicate_and_rank_results(
+    results: List[SearchResult],
+    claim_result: Optional[ClaimResult] = None,
+) -> List[SearchResult]:
+    """Deduplicate search results by normalized URL and prioritize relevant, credible sources."""
     seen: set[str] = set()
+    seen_titles: set[str] = set()
     unique: List[SearchResult] = []
     for item in results:
         norm = normalize_url(item.url)
-        if norm not in seen:
+        title_key = " ".join(item.title.lower().split())[:60]
+        if norm not in seen and title_key not in seen_titles:
             seen.add(norm)
+            seen_titles.add(title_key)
             unique.append(item)
 
-    unique.sort(key=lambda item: get_source_credibility(item.url), reverse=True)
+    anchors = _extract_anchor_terms(claim_result)
+    primary_entity = claim_result.entities.movie if claim_result else None
+
+    if anchors:
+        filtered = [
+            item for item in unique
+            if _relevance_score(item, anchors, primary_entity) > 0.25
+        ]
+        if filtered:
+            unique = filtered
+
+    unique.sort(
+        key=lambda item: (
+            round(_relevance_score(item, anchors, primary_entity), 1),
+            _result_credibility(item),
+        ),
+        reverse=True,
+    )
     return unique
 
 
 def _extract_source_name(url: str, metadata_sitename: Optional[str]) -> str:
-    if metadata_sitename and metadata_sitename.strip():
+    if metadata_sitename and metadata_sitename.strip() and metadata_sitename.strip().lower() not in {"news", "bing"}:
         return metadata_sitename.strip()
     hostname = (urlparse(url).hostname or "unknown").lower()
     return hostname[4:] if hostname.startswith("www.") else hostname
@@ -381,29 +573,42 @@ async def _fetch_article(
     client: httpx.AsyncClient,
     result: SearchResult,
 ) -> Optional[Dict[str, Any]]:
-    """Download and extract a single article, falling back to snippet on fetch error."""
-    try:
-        response = await client.get(result.url)
-        response.raise_for_status()
-        article = await asyncio.to_thread(
-            extract_article_from_html,
-            response.text,
-            str(response.url),
-            result.title,
-            result.snippet,
-            result.displayed_date,
-        )
-        if article["text"]:
-            return article
-    except Exception as exc:
-        logger.debug("Fetch failed for %s (%s); using snippet fallback.", result.url, exc)
+    """Download and extract a single article, preserving true publisher source attribution."""
+    fallback_source = result.source_name or _extract_source_name(
+        f"https://{result.source_domain}" if result.source_domain else result.url, None
+    )
+    source_domain = result.source_domain
 
-    if result.snippet.strip():
+    # Google News RSS article URLs are encrypted redirect tokens that don't expose HTML directly
+    is_google_redirect = "news.google.com/rss/articles/" in result.url
+    if not is_google_redirect:
+        try:
+            response = await client.get(result.url)
+            response.raise_for_status()
+            article = await asyncio.to_thread(
+                extract_article_from_html,
+                response.text,
+                str(response.url),
+                result.title,
+                result.snippet,
+                result.displayed_date,
+            )
+            if article["text"] and "google news" not in article["text"].lower()[:60]:
+                if article["source_name"].lower() in {"news", "google news", "unknown"} and result.source_name:
+                    article["source_name"] = result.source_name
+                article["source_domain"] = source_domain or urlparse(article["url"]).hostname
+                return article
+        except Exception as exc:
+            logger.debug("Fetch failed for %s (%s); using RSS snippet fallback.", result.url, exc)
+
+    text_body = result.snippet.strip() or result.title.strip()
+    if text_body:
         return {
             "title": result.title,
-            "text": result.snippet.strip(),
+            "text": text_body,
             "published_date": result.displayed_date,
-            "source_name": _extract_source_name(result.url, None),
+            "source_name": fallback_source,
+            "source_domain": source_domain,
             "url": result.url,
         }
     return None
@@ -418,13 +623,13 @@ async def retrieve_evidence(
     queries = generate_search_queries(claim_result)
     raw_results: List[SearchResult] = list(prefetched_results or [])
 
-    # Determine which queries still need to run
     norm_prefetched = (prefetched_query or "").strip().lower()
     remaining_queries = [q for q in queries if q.strip().lower() != norm_prefetched]
 
-    # Skip secondary search if speculative raw-claim search already found >= 3 Tier-1/2 sources.
     high_cred_prefetched = sum(
-        1 for item in deduplicate_and_rank_results(raw_results) if get_source_credibility(item.url) >= 0.72
+        1
+        for item in deduplicate_and_rank_results(raw_results, claim_result)
+        if _result_credibility(item) >= 0.72
     )
     if high_cred_prefetched >= 3 and raw_results:
         remaining_queries = []
@@ -438,7 +643,7 @@ async def retrieve_evidence(
                 continue
             raw_results.extend(batch)
 
-    top_results = deduplicate_and_rank_results(raw_results)[:MAX_URLS_TO_FETCH]
+    top_results = deduplicate_and_rank_results(raw_results, claim_result)[:MAX_URLS_TO_FETCH]
     if not top_results:
         return []
 
@@ -475,7 +680,10 @@ async def retrieve_evidence(
 
     passages: List[EvidencePassage] = []
     for article, selected_chunks in zip(valid_articles, selected_lists):
-        credibility = get_source_credibility(article["url"])
+        cred_url = f"https://{article['source_domain']}" if article.get("source_domain") else article["url"]
+        credibility = get_source_credibility(cred_url)
+        if credibility <= 0.40:
+            credibility = get_source_credibility(article["url"])
         for chunk in selected_chunks:
             passages.append(
                 EvidencePassage(

@@ -1,111 +1,43 @@
-"""Natural Language Inference (NLI) claim-evidence verification (owned by Member 1)."""
+"""Natural Language Inference (NLI) claim-evidence verification powered by unified local CineVerify SLM."""
 
 from __future__ import annotations
 
-from functools import lru_cache
-from typing import Dict, List
+import logging
+from typing import List, Optional, Tuple
 
-import numpy as np
-import torch
-from sentence_transformers import CrossEncoder
+from app.schemas.claim import ClaimResult
+from app.schemas.evidence import EvidencePassage
+from app.schemas.verdict import NLIResult, VerdictLabel
+from app.services.cineverify_slm import (
+    verify_claim_unified_with_slm,
+    verify_passages_with_slm,
+)
 
-from app.core.models_config import NLI_MODEL_NAME
-from app.schemas.evidence import EvidencePassage, StanceLabel
-from app.schemas.verdict import NLIResult
-
-_DEFAULT_ID_TO_STANCE: Dict[int, StanceLabel] = {
-    0: StanceLabel.CONTRADICTS,
-    1: StanceLabel.SUPPORTS,
-    2: StanceLabel.NEUTRAL,
-}
+logger = logging.getLogger(__name__)
 
 
-@lru_cache(maxsize=1)
-def _get_nli_model() -> CrossEncoder:
-    """Lazy-load and cache the NLI CrossEncoder model once per process."""
-    return CrossEncoder(NLI_MODEL_NAME, max_length=256)
+def _get_nli_model():
+    """Stub retained for compatibility - verification runs natively via local CineVerify SLM."""
+    return None
 
 
-def _resolve_id_to_stance(model: object) -> Dict[int, StanceLabel]:
-    """Read model.model.config.id2label dynamically to avoid hardcoded label-index assumptions."""
-    inner_model = getattr(model, "model", None)
-    config = getattr(inner_model, "config", None)
-    id2label = getattr(config, "id2label", None)
-    if not isinstance(id2label, dict) or not id2label:
-        return dict(_DEFAULT_ID_TO_STANCE)
-
-    mapping: Dict[int, StanceLabel] = {}
-    for raw_idx, raw_label in id2label.items():
-        idx = int(raw_idx)
-        label = str(raw_label).strip().lower()
-        if "entail" in label or "support" in label:
-            mapping[idx] = StanceLabel.SUPPORTS
-        elif "contradict" in label or "refut" in label:
-            mapping[idx] = StanceLabel.CONTRADICTS
-        elif "neutral" in label:
-            mapping[idx] = StanceLabel.NEUTRAL
-
-    if len(mapping) < 3:
-        return dict(_DEFAULT_ID_TO_STANCE)
-    return mapping
-
-
-def _ensure_probabilities(scores: np.ndarray) -> np.ndarray:
-    """Normalize a 2D array of logits/probabilities row-wise via softmax when needed."""
-    matrix = np.atleast_2d(np.asarray(scores, dtype=np.float64))
-    row_sums = matrix.sum(axis=1, keepdims=True)
-    already_probs = np.all(matrix >= -1e-6) and np.all(matrix <= 1.0 + 1e-6) and np.allclose(row_sums, 1.0, atol=1e-3)
-    if already_probs:
-        return np.clip(matrix, 0.0, 1.0)
-
-    shifted = matrix - np.max(matrix, axis=1, keepdims=True)
-    exps = np.exp(shifted)
-    return exps / np.sum(exps, axis=1, keepdims=True)
-
-
-def _build_premise(passage: EvidencePassage) -> str:
-    """Include article headline and date in the NLI premise for richer context."""
-    header_parts: List[str] = []
-    title = (passage.title or "").strip()
-    if title:
-        header_parts.append(f"Headline: {title}")
-    if passage.published_date:
-        header_parts.append(f"Published: {passage.published_date}")
-    if not header_parts:
-        return passage.text
-    return f"[{' | '.join(header_parts)}] {passage.text}"
-
-
-def verify_claim(core_claim: str, passages: List[EvidencePassage]) -> List[NLIResult]:
-    """Classify each evidence passage as supports, contradicts, or neutral vs. core_claim."""
+def verify_claim(core_claim: str, passages: List[EvidencePassage], movie_name: Optional[str] = None) -> List[NLIResult]:
+    """
+    Classify each evidence passage as supports, contradicts, or neutral vs. core_claim.
+    Powered by entity-aware local CineVerify SLM logic (replaces DeBERTa CrossEncoder).
+    """
     if not passages or not (core_claim or "").strip():
         return []
 
-    model = _get_nli_model()
-    id_to_stance = _resolve_id_to_stance(model)
+    return verify_passages_with_slm(core_claim, passages, movie_name=movie_name)
 
-    # NLI expects (premise, hypothesis) = (enriched evidence passage, core claim).
-    pairs = [(_build_premise(passage), core_claim) for passage in passages]
-    with torch.inference_mode():
-        raw_scores = model.predict(
-            pairs,
-            batch_size=8,
-            apply_softmax=True,
-            convert_to_numpy=True,
-            show_progress_bar=False,
-        )
-    probs = _ensure_probabilities(raw_scores)
 
-    results: List[NLIResult] = []
-    for idx, row in enumerate(probs):
-        best_label_idx = int(np.argmax(row))
-        stance = id_to_stance.get(best_label_idx, StanceLabel.NEUTRAL)
-        confidence = float(np.clip(row[best_label_idx], 0.0, 1.0))
-        results.append(
-            NLIResult(
-                passage_index=idx,
-                stance=stance,
-                confidence=round(confidence, 4),
-            )
-        )
-    return results
+def verify_claim_unified(
+    claim_result: ClaimResult,
+    passages: List[EvidencePassage],
+) -> Tuple[List[NLIResult], VerdictLabel, float]:
+    """
+    Run the unified local CineVerify SLM grounded on ClaimResult + Retrieved Live Evidence,
+    returning aligned NLI stances, coherent verdict, and calibrated confidence.
+    """
+    return verify_claim_unified_with_slm(claim_result, passages)
