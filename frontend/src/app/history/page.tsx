@@ -7,12 +7,14 @@ import {
   ArrowLeft,
   ArrowUpRight,
   History,
+  Loader2,
   RotateCcw,
   Search,
+  Trash2,
   X,
 } from "lucide-react";
 import VerdictBadge from "@/components/VerdictBadge";
-import { getHistory } from "@/lib/api";
+import { deleteVerificationById, getHistory } from "@/lib/api";
 import { CATEGORY_LABELS, formatVerificationDate } from "@/lib/formatters";
 import type { ClaimCategory, HistoryItem, VerdictLabel } from "@/types/api";
 
@@ -43,11 +45,12 @@ export default function HistoryPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [reloadCount, setReloadCount] = useState(0);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
 
-    getHistory()
+    getHistory(50)
       .then((data) => {
         if (!cancelled) {
           setItems(data);
@@ -77,6 +80,18 @@ export default function HistoryPage() {
     setIsLoading(true);
     setError(null);
     setReloadCount((prev) => prev + 1);
+  }
+
+  async function handleDelete(item: HistoryItem) {
+    setDeletingId(item.id);
+    try {
+      await deleteVerificationById(item.id);
+      setItems((prev) => prev.filter((entry) => entry.id !== item.id));
+    } catch {
+      // Keep item visible if deletion fails
+    } finally {
+      setDeletingId(null);
+    }
   }
 
   const filteredItems = useMemo(() => {
@@ -120,7 +135,7 @@ export default function HistoryPage() {
 
       {/* Search & Category Controls */}
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="relative flex-1 max-w-md">
+        <div className="relative max-w-md flex-1">
           <Search
             className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--ink-500)]"
             aria-hidden="true"
@@ -253,6 +268,7 @@ export default function HistoryPage() {
               const confidencePercent = Math.round(
                 Math.max(0, Math.min(1, item.confidence)) * 100,
               );
+              const isDeleting = deletingId === item.id;
               return (
                 <article
                   key={item.id}
@@ -272,13 +288,35 @@ export default function HistoryPage() {
                       {CATEGORY_LABELS[item.category]} ·{" "}
                       {formatVerificationDate(item.verified_at)}
                     </span>
-                    <Link
-                      href={`/verify?claim=${encodeURIComponent(item.submitted_claim)}&type=text`}
-                      className="inline-flex items-center gap-1 font-semibold text-[var(--ink-900)] hover:underline"
-                    >
-                      <span>Re-verify</span>
-                      <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
-                    </Link>
+                    <div className="flex items-center gap-2">
+                      <Link
+                        href={`/verify?id=${encodeURIComponent(item.id)}&claim=${encodeURIComponent(item.submitted_claim)}`}
+                        className="inline-flex items-center gap-1 font-semibold text-[var(--ink-900)] hover:underline"
+                      >
+                        <span>View</span>
+                        <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+                      </Link>
+                      <Link
+                        href={`/verify?claim=${encodeURIComponent(item.submitted_claim)}&type=text&autorun=1`}
+                        className="inline-flex items-center gap-1 font-medium text-[var(--ink-500)] hover:text-[var(--ink-900)]"
+                      >
+                        <RotateCcw className="h-3 w-3" aria-hidden="true" />
+                        <span>Re-run</span>
+                      </Link>
+                      <button
+                        type="button"
+                        disabled={isDeleting}
+                        onClick={() => void handleDelete(item)}
+                        aria-label={`Delete "${item.submitted_claim}"`}
+                        className="rounded p-1 text-[var(--ink-400)] hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
+                      >
+                        {isDeleting ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+                        ) : (
+                          <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </article>
               );
@@ -296,7 +334,7 @@ export default function HistoryPage() {
                     <th className="px-4 py-3">Category</th>
                     <th className="px-4 py-3">Confidence</th>
                     <th className="px-4 py-3">Verified At</th>
-                    <th className="px-6 py-3 text-right">Action</th>
+                    <th className="px-6 py-3 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[var(--border)]">
@@ -304,13 +342,19 @@ export default function HistoryPage() {
                     const confidencePercent = Math.round(
                       Math.max(0, Math.min(1, item.confidence)) * 100,
                     );
+                    const isDeleting = deletingId === item.id;
                     return (
                       <tr
                         key={item.id}
                         className="transition-colors hover:bg-white/50"
                       >
                         <td className="max-w-md px-6 py-3.5 font-medium text-[var(--ink-900)]">
-                          {item.submitted_claim}
+                          <Link
+                            href={`/verify?id=${encodeURIComponent(item.id)}&claim=${encodeURIComponent(item.submitted_claim)}`}
+                            className="hover:underline"
+                          >
+                            {item.submitted_claim}
+                          </Link>
                         </td>
                         <td className="whitespace-nowrap px-4 py-3.5">
                           <VerdictBadge verdict={item.verdict} />
@@ -325,13 +369,36 @@ export default function HistoryPage() {
                           {formatVerificationDate(item.verified_at)}
                         </td>
                         <td className="whitespace-nowrap px-6 py-3.5 text-right">
-                          <Link
-                            href={`/verify?claim=${encodeURIComponent(item.submitted_claim)}&type=text`}
-                            className="inline-flex items-center gap-1 rounded-lg border border-[var(--border)] bg-white/75 px-2.5 py-1 text-xs font-medium text-[var(--ink-900)] transition-colors hover:border-[var(--border-strong)] hover:bg-white"
-                          >
-                            <span>Re-verify</span>
-                            <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
-                          </Link>
+                          <div className="inline-flex items-center justify-end gap-1.5">
+                            <Link
+                              href={`/verify?id=${encodeURIComponent(item.id)}&claim=${encodeURIComponent(item.submitted_claim)}`}
+                              className="inline-flex items-center gap-1 rounded-lg border border-[var(--border)] bg-white/80 px-2.5 py-1 text-xs font-semibold text-[var(--ink-900)] transition-colors hover:border-[var(--border-strong)] hover:bg-white"
+                            >
+                              <span>View</span>
+                              <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
+                            </Link>
+                            <Link
+                              href={`/verify?claim=${encodeURIComponent(item.submitted_claim)}&type=text&autorun=1`}
+                              title="Re-run verification live"
+                              className="inline-flex items-center gap-1 rounded-lg border border-[var(--border)] bg-white/60 px-2 py-1 text-xs font-medium text-[var(--ink-500)] transition-colors hover:border-[var(--border-strong)] hover:bg-white hover:text-[var(--ink-900)]"
+                            >
+                              <RotateCcw className="h-3 w-3" aria-hidden="true" />
+                            </Link>
+                            <button
+                              type="button"
+                              disabled={isDeleting}
+                              onClick={() => void handleDelete(item)}
+                              aria-label={`Delete "${item.submitted_claim}"`}
+                              title="Delete entry"
+                              className="inline-flex items-center justify-center rounded-lg border border-transparent p-1.5 text-[var(--ink-400)] transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
+                            >
+                              {isDeleting ? (
+                                <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+                              ) : (
+                                <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
+                              )}
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );

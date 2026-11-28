@@ -12,13 +12,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.database.connection import close_database
 from app.routes import history, verify
+from app.services.evidence_retriever import _get_embedding_model
 from app.services.nli_verifier import _get_nli_model
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
-    """Preload cached ML models at startup and close DB resources on shutdown."""
-    await asyncio.to_thread(_get_nli_model)
+    """Preload cached ML models in parallel at startup so the first request has zero cold-start lag."""
+    await asyncio.gather(
+        asyncio.to_thread(_get_nli_model),
+        asyncio.to_thread(_get_embedding_model),
+    )
     yield
     await close_database()
 

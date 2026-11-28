@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import ipaddress
 import json
 import logging
 import re
+import socket
 from typing import Any, Optional
+from urllib.parse import urlparse
 
 import trafilatura
 from google.genai import types
@@ -22,14 +25,93 @@ from app.schemas.claim import ClaimCategory, ClaimResult, ExtractedEntities, Inp
 logger = logging.getLogger(__name__)
 
 _MAX_URL_TEXT_CHARS = 1500
+_BLOCKED_HOSTNAMES = {
+    "localhost",
+    "localhost.localdomain",
+    "metadata.google.internal",
+}
+_SOCIAL_DOMAINS = (
+    "x.com",
+    "twitter.com",
+    "instagram.com",
+    "facebook.com",
+    "threads.net",
+    "youtube.com",
+    "youtu.be",
+)
+
+
+def _is_disallowed_ip(ip_str: str) -> bool:
+    """Return True if an IP literal is private, loopback, link-local, or reserved."""
+    try:
+        addr = ipaddress.ip_address(ip_str)
+    except ValueError:
+        return True
+    return (
+        addr.is_private
+        or addr.is_loopback
+        or addr.is_link_local
+        or addr.is_multicast
+        or addr.is_reserved
+        or addr.is_unspecified
+    )
+
+
+def _validate_public_url(url: str) -> str:
+    """Validate HTTP(S) URL syntax and block local/private SSRF targets."""
+    target = url.strip()
+    parsed = urlparse(target)
+    if parsed.scheme.lower() not in {"http", "https"} or not parsed.hostname:
+        raise ValueError("Please provide a valid URL starting with http:// or https://.")
+
+    hostname = parsed.hostname.lower().rstrip(".")
+    if (
+        hostname in _BLOCKED_HOSTNAMES
+        or hostname.endswith(".local")
+        or hostname.endswith(".internal")
+    ):
+        raise ValueError("Local or internal URLs are not permitted for verification.")
+
+    try:
+        ipaddress.ip_address(hostname)
+        if _is_disallowed_ip(hostname):
+            raise ValueError("Private or loopback IP addresses are not permitted.")
+        return target
+    except ValueError as exc:
+        if "not permitted" in str(exc):
+            raise
+
+    try:
+        infos = socket.getaddrinfo(hostname, None)
+        for info in infos:
+            resolved_ip = info[4][0]
+            if _is_disallowed_ip(resolved_ip):
+                raise ValueError("URL resolves to a restricted network address.")
+    except socket.gaierror:
+        pass
+
+    return target
+
+
+def _is_social_domain(url: str) -> bool:
+    hostname = (urlparse(url).hostname or "").lower()
+    if hostname.startswith("www."):
+        hostname = hostname[4:]
+    return any(hostname == d or hostname.endswith(f".{d}") for d in _SOCIAL_DOMAINS)
 
 
 def _extract_url_content(url: str) -> str:
     """Fetch a webpage and extract its title and main body text for claim analysis."""
-    target_url = url.strip()
+    target_url = _validate_public_url(url)
     downloaded = trafilatura.fetch_url(target_url)
     if not downloaded:
-        raise ValueError(f"Failed to fetch content from URL: {target_url}")
+        if _is_social_domain(target_url):
+            raise ValueError(
+                "Social media links often block automated reading. Please copy and paste the post text or headline in Headline mode."
+            )
+        raise ValueError(
+            "Unable to fetch readable content from that URL (the site may block automated requests or require JavaScript). Try pasting the headline instead."
+        )
 
     extracted_text = trafilatura.extract(
         downloaded,
@@ -41,7 +123,9 @@ def _extract_url_content(url: str) -> str:
     body = (extracted_text or "").strip()
 
     if not title and not body:
-        raise ValueError(f"Could not extract readable article text from URL: {target_url}")
+        raise ValueError(
+            "Could not extract readable article text from that URL. Please paste the headline or excerpt directly in Headline mode."
+        )
 
     combined = f"{title}\n\n{body}".strip() if title and body else (title or body)
     return combined[:_MAX_URL_TEXT_CHARS]

@@ -15,6 +15,15 @@ export type VerdictLabel = "VERIFIED" | "FALSE" | "MISLEADING" | "UNVERIFIED";
 
 export type StanceLabel = "supports" | "contradicts" | "neutral";
 
+export type ComparisonStatus = "match" | "mismatch" | "unclear";
+
+export interface ClaimComparison {
+  aspect: string;
+  claimed: string;
+  reported: string;
+  status: ComparisonStatus;
+}
+
 export interface ClaimRequest {
   claim: string;
   type: InputType;
@@ -49,6 +58,7 @@ export interface VerificationResponse {
   explanation: string;
   entities: ExtractedEntities;
   evidence: EvidenceItem[];
+  claim_comparisons?: ClaimComparison[];
   verified_at: string;
 }
 
@@ -59,4 +69,44 @@ export interface HistoryItem {
   confidence: number;
   category: ClaimCategory;
   verified_at: string;
+}
+
+export interface FollowUpTurn {
+  role: "user" | "assistant";
+  content: string;
+}
+
+export interface FollowUpRequest {
+  claim: string;
+  core_claim: string;
+  verdict: VerdictLabel;
+  explanation: string;
+  evidence: EvidenceItem[];
+  question: string;
+  history: FollowUpTurn[];
+}
+
+export interface FollowUpResponse {
+  answer: string;
+  cited_sources: string[];
+}
+
+export interface VerifyStreamEvent {
+  stage:
+    | "extracting_claim"
+    | "searching_sources"
+    | "nli_comparison"
+    | "generating_report"
+    | "complete"
+    | "error";
+  status?: "running" | "done";
+  step?: number;
+  detail?: string;
+  report?: VerificationResponse;
+}
+
+export interface HealthResponse {
+  status: string;
+  service: string;
+  version: string;
 }

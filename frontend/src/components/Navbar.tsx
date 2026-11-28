@@ -3,21 +3,32 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const NAV_LINKS = [
+const MINIMAL_LINKS = [
+  { href: "/benchmarks", label: "Benchmarks" },
+  { href: "/about", label: "About" },
+  { href: "/help", label: "Help" },
+] as const;
+
+const FULL_LINKS = [
+  { href: "/verify", label: "Verify" },
+  { href: "/history", label: "History" },
+  { href: "/benchmarks", label: "Benchmarks" },
   { href: "/about", label: "About" },
   { href: "/help", label: "Help" },
 ] as const;
 
 export default function Navbar() {
   const pathname = usePathname();
+  const isMinimalSurface = pathname === "/" || pathname === "/verify";
+  const links = isMinimalSurface ? MINIMAL_LINKS : FULL_LINKS;
 
   return (
     <header className="pointer-events-none sticky top-2.5 z-50 flex w-full justify-end pl-5 pr-8 pt-2 sm:pl-8 sm:pr-12">
       <nav
         aria-label="Primary navigation"
-        className="pointer-events-auto inline-flex items-center gap-8 rounded-2xl border border-white/60 bg-white/25 px-6 py-2.5 shadow-[0_8px_24px_-8px_rgba(15,15,26,0.12)] backdrop-blur-md"
+        className="pointer-events-auto inline-flex items-center gap-5 rounded-2xl border border-white/60 bg-white/30 px-5 py-2.5 shadow-[0_8px_24px_-8px_rgba(15,15,26,0.12)] backdrop-blur-md sm:gap-7 sm:px-6"
       >
-        {NAV_LINKS.map((link) => {
+        {links.map((link) => {
           const isActive = pathname === link.href;
           return (
             <Link

@@ -112,13 +112,19 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <div>
+      <div className="flex flex-wrap items-center gap-3">
         <Link
           href="/verify"
           className="cta-lime inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold"
         >
           <span>Try Claim Verification</span>
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        </Link>
+        <Link
+          href="/benchmarks"
+          className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-white/75 px-4 py-2.5 text-sm font-semibold text-[var(--ink-900)] transition-colors hover:border-[var(--border-strong)] hover:bg-white"
+        >
+          <span>View Live Benchmarks &amp; Telemetry</span>
         </Link>
       </div>
     </main>

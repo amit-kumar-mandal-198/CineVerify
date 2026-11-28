@@ -12,11 +12,19 @@ from app.core.models_config import (
     MIN_VERIFIED_SUPPORT_COUNT,
     OUTDATED_GAP_DAYS,
 )
-from app.schemas.claim import ClaimResult
+from app.schemas.claim import ClaimCategory, ClaimResult
 from app.schemas.evidence import EvidencePassage, StanceLabel
 from app.schemas.verdict import NLIResult, VerdictLabel, VerdictOutput
 
 _STRONG_STANCE_CONFIDENCE = 0.65
+_EVERGREEN_PAST_MILESTONE_RE = re.compile(
+    r"\b(crossed|grossed|earned|collected|became|won|completed)\b",
+    re.IGNORECASE,
+)
+_RECENCY_CUE_RE = re.compile(
+    r"\b(today|now|currently|latest|this week|this month|recently|just|releasing|slated|set to|upcoming|walks out|joins)\b",
+    re.IGNORECASE,
+)
 _DATE_FORMATS = (
     "%Y-%m-%d",
     "%Y/%m/%d",
@@ -61,7 +69,18 @@ def _parse_date(raw_date: Optional[str]) -> Optional[date]:
     return None
 
 
+def _is_evergreen_historical_claim(claim_result: ClaimResult) -> bool:
+    """Return True for historical past-tense milestone claims that do not expire after 180 days."""
+    text = f"{claim_result.submitted_claim} {claim_result.core_claim}"
+    if _RECENCY_CUE_RE.search(text):
+        return False
+    if claim_result.category == ClaimCategory.BOX_OFFICE:
+        return True
+    return bool(_EVERGREEN_PAST_MILESTONE_RE.search(text))
+
+
 def _has_outdated_evidence(
+    claim_result: ClaimResult,
     claim_date: Optional[date],
     supporting_passages: List[EvidencePassage],
     reference_today: date,
@@ -73,6 +92,9 @@ def _has_outdated_evidence(
         if (parsed := _parse_date(passage.published_date)) is not None
     ]
     if not parsed_evidence_dates:
+        return False
+
+    if claim_date is None and _is_evergreen_historical_claim(claim_result):
         return False
 
     # If at least one credible supporting article is recent/aligned, do not penalize older background articles.
@@ -149,6 +171,7 @@ def generate_verdict(
     claim_date = _parse_date(claim_result.entities.date)
     supporting_passages = [p for _, p in strong_supports]
     outdated_support = bool(supporting_passages) and _has_outdated_evidence(
+        claim_result=claim_result,
         claim_date=claim_date,
         supporting_passages=supporting_passages,
         reference_today=date.today(),

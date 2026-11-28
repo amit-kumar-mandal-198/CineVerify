@@ -10,10 +10,15 @@ from unittest.mock import patch
 import numpy as np
 
 from app.schemas.claim import ClaimCategory, ClaimResult, ExtractedEntities, InputType
-from app.schemas.evidence import EvidencePassage, StanceLabel
-from app.schemas.verdict import NLIResult, VerdictLabel
+from app.schemas.evidence import EvidenceItem, EvidencePassage, StanceLabel
+from app.schemas.verdict import FollowUpRequest, NLIResult, VerdictLabel
 from app.services.claim_extractor import extract_claim
-from app.services.explanation_gen import generate_explanation
+from app.services.evidence_retriever import select_best_chunks_batch, select_relevant_chunks
+from app.services.explanation_gen import (
+    answer_followup_question,
+    build_claim_comparisons,
+    generate_explanation,
+)
 from app.services.nli_verifier import verify_claim
 from app.services.verdict_engine import generate_verdict
 
@@ -226,6 +231,90 @@ def test_explanation_and_e2e_offline() -> None:
     print("[PASS] Steps 5 & 6 offline tests passed.")
 
 
+def test_security_and_extensions_offline() -> None:
+    """Regression checks for SSRF URL guard, evergreen box-office milestone, comparisons, and follow-up."""
+    # 1. SSRF URL guard blocks localhost and private IP literals
+    for unsafe_url in ("http://127.0.0.1:8000/api/history", "http://localhost:3000", "http://169.254.169.254/latest"):
+        try:
+            extract_claim(unsafe_url, InputType.URL)
+            raise AssertionError(f"Expected SSRF guard to reject {unsafe_url}")
+        except ValueError:
+            pass
+
+    # 2. Historical box-office milestone from >180 days ago stays VERIFIED (not MISLEADING)
+    old_date = (date.today() - timedelta(days=500)).isoformat()
+    evergreen_claim = ClaimResult(
+        submitted_claim="Kalki 2898 AD crossed 1000 crore worldwide at the box office",
+        core_claim="Kalki 2898 AD crossed 1000 crore worldwide.",
+        category=ClaimCategory.BOX_OFFICE,
+        entities=ExtractedEntities(movie="Kalki 2898 AD", amount="1000 crore worldwide"),
+    )
+    evergreen_passages = [
+        _make_passage("Bollywood Hungama", "Kalki 2898 AD officially crossed 1000 crore worldwide.", old_date, 0.90),
+        _make_passage("Sacnilk", "Kalki 2898 AD earned over 1042 crore worldwide gross.", old_date, 0.90),
+    ]
+    evergreen_nli = [
+        NLIResult(passage_index=0, stance=StanceLabel.SUPPORTS, confidence=0.92),
+        NLIResult(passage_index=1, stance=StanceLabel.SUPPORTS, confidence=0.89),
+    ]
+    evergreen_verdict = generate_verdict(evergreen_claim, evergreen_nli, evergreen_passages)
+    assert evergreen_verdict.verdict == VerdictLabel.VERIFIED, f"Expected VERIFIED, got {evergreen_verdict}"
+
+    # 3. Claim comparisons builder produces structured rows
+    comparisons = build_claim_comparisons(evergreen_claim, evergreen_verdict, evergreen_passages, evergreen_nli)
+    assert len(comparisons) >= 1 and comparisons[0].status.value == "match"
+
+    # 4. Chunk relevance selector (single & batch) returns top chunks in original order
+    with patch("app.services.evidence_retriever._get_embedding_model", return_value=None):
+        picked = select_relevant_chunks(
+            "Kalki 2898 AD crossed 1000 crore worldwide",
+            [
+                "Actor Prabhas attended an unrelated award ceremony last summer.",
+                "Kalki 2898 AD crossed 1000 crore worldwide box office gross according to Sacnilk.",
+                "The film features futuristic visual effects shot in Hyderabad.",
+                "Worldwide collections reached 1042 crore across Hindi and Telugu versions.",
+            ],
+            max_chunks=2,
+        )
+        assert len(picked) == 2 and "1000 crore" in picked[0]
+
+        batched = select_best_chunks_batch(
+            "Kalki 2898 AD crossed 1000 crore worldwide",
+            [
+                ["Intro bio text.", "Kalki 2898 AD crossed 1000 crore worldwide gross."],
+                ["Sacnilk reports 1042 crore worldwide.", "Unrelated trailer note."],
+            ],
+            max_chunks_per_article=1,
+        )
+        assert len(batched) == 2 and "1000 crore" in batched[0][0] and "1042 crore" in batched[1][0]
+
+    # 5. Grounded follow-up Q&A fallback works cleanly offline
+    with patch("app.services.explanation_gen.has_valid_gemini_key", return_value=False):
+        followup = answer_followup_question(
+            FollowUpRequest(
+                claim=evergreen_claim.submitted_claim,
+                core_claim=evergreen_claim.core_claim,
+                verdict=VerdictLabel.VERIFIED,
+                explanation="Confirmed by trade trackers.",
+                evidence=[
+                    EvidenceItem(
+                        source_name="Sacnilk",
+                        url="https://sacnilk.com/test",
+                        title="Kalki crosses 1000 Cr",
+                        published_date=old_date,
+                        stance=StanceLabel.SUPPORTS,
+                        snippet="Kalki 2898 AD earned 1042 crore worldwide.",
+                        credibility_score=0.9,
+                    )
+                ],
+                question="What figure did Sacnilk report?",
+            )
+        )
+        assert "Sacnilk" in followup.answer and "1042" in followup.answer
+
+    print("[PASS] Security, evergreen verdict, chunk ranking, comparisons, and follow-up offline tests passed.")
+
+
 def test_live_claim_extraction_and_nli() -> None:
     """Steps 2, 3, 5 & 6 live check (requires GEMINI_API_KEY and downloaded HuggingFace NLI model)."""
     # Step 2: 4 headline categories
@@ -296,6 +385,7 @@ def main() -> None:
     test_nli_verifier_offline()
     test_verdict_engine_all_four_outcomes()
     test_explanation_and_e2e_offline()
+    test_security_and_extensions_offline()
     if args.live:
         test_live_claim_extraction_and_nli()
     else:

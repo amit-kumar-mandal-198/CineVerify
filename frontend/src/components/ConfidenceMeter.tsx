@@ -10,27 +10,23 @@ interface ConfidenceMeterProps {
 
 const VERDICT_METER_STYLES: Record<
   VerdictLabel,
-  { bar: string; text: string; suffix: string }
+  { bar: string; text: string }
 > = {
   VERIFIED: {
     bar: "bg-emerald-500",
-    text: "text-emerald-600 dark:text-emerald-400",
-    suffix: "True",
+    text: "text-emerald-700 dark:text-emerald-400",
   },
   FALSE: {
     bar: "bg-red-500",
-    text: "text-red-600 dark:text-red-400",
-    suffix: "False",
+    text: "text-red-700 dark:text-red-400",
   },
   MISLEADING: {
     bar: "bg-amber-500",
-    text: "text-amber-600 dark:text-amber-400",
-    suffix: "Misleading",
+    text: "text-amber-700 dark:text-amber-400",
   },
   UNVERIFIED: {
     bar: "bg-slate-400 dark:bg-slate-500",
-    text: "text-zinc-600 dark:text-zinc-300",
-    suffix: "Evidence",
+    text: "text-zinc-700 dark:text-zinc-300",
   },
 };
 
@@ -45,16 +41,14 @@ export default function ConfidenceMeter({
   return (
     <div className="space-y-1.5">
       <div className="flex items-center justify-between text-xs font-medium">
-        <span className="text-[var(--ink-500)]">
-          Evidence Strength
-        </span>
+        <span className="text-[var(--ink-500)]">Verdict Confidence</span>
         <span className={`font-semibold tabular-nums ${style.text}`}>
-          {percentage}% {style.suffix}
+          {percentage}%
         </span>
       </div>
       <div
         role="progressbar"
-        aria-label="Evidence Strength"
+        aria-label="Verdict Confidence"
         aria-valuenow={percentage}
         aria-valuemin={0}
         aria-valuemax={100}

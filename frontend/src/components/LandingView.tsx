@@ -279,7 +279,7 @@ export default function LandingView() {
                 type="button"
                 onClick={() =>
                   navigateToVerify(
-                    `/verify?claim=${encodeURIComponent(topic.claim)}&type=text`,
+                    `/verify?claim=${encodeURIComponent(topic.claim)}&type=text&autorun=1`,
                   )
                 }
                 className={`group flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-[var(--border)] bg-white/85 px-4 py-3 text-left backdrop-blur-sm transition-all duration-150 hover:border-[var(--ink-900)]/30 hover:bg-white/95 hover:shadow-sm ${
@@ -425,7 +425,7 @@ export default function LandingView() {
                     type="button"
                     onClick={() =>
                       navigateToVerify(
-                        `/verify?claim=${encodeURIComponent(item.submitted_claim)}&type=text`,
+                        `/verify?id=${encodeURIComponent(item.id)}&claim=${encodeURIComponent(item.submitted_claim)}`,
                       )
                     }
                     className="group flex cursor-pointer flex-col justify-between gap-2.5 rounded-xl border border-[var(--border)] bg-white/85 px-4 py-3.5 text-left backdrop-blur-sm transition-all duration-150 hover:border-[var(--ink-900)]/30 hover:bg-white/95 hover:shadow-sm"

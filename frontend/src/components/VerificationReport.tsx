@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Check, Copy, FileSearch, Tag } from "lucide-react";
+import ClaimDiffCard from "@/components/ClaimDiffCard";
 import ConfidenceMeter from "@/components/ConfidenceMeter";
 import EvidenceCard from "@/components/EvidenceCard";
 import ExplanationBox from "@/components/ExplanationBox";
@@ -173,6 +174,9 @@ export default function VerificationReport({
           </div>
         )}
       </section>
+
+      {/* Claim vs. Evidence Diff Card */}
+      <ClaimDiffCard report={report} />
 
       {/* AI Explanation */}
       <ExplanationBox explanation={report.explanation} verdict={report.verdict} />

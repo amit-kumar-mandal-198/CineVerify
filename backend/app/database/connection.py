@@ -86,7 +86,33 @@ def ensure_table_exists_sync(
     client.create_table(
         TableName=table_name,
         KeySchema=[{"AttributeName": "id", "KeyType": "HASH"}],
-        AttributeDefinitions=[{"AttributeName": "id", "AttributeType": "S"}],
+        AttributeDefinitions=[
+            {"AttributeName": "id", "AttributeType": "S"},
+            {"AttributeName": "record_type", "AttributeType": "S"},
+            {"AttributeName": "verified_at", "AttributeType": "S"},
+        ],
+        GlobalSecondaryIndexes=[
+            {
+                "IndexName": "record_type-verified_at-index",
+                "KeySchema": [
+                    {"AttributeName": "record_type", "KeyType": "HASH"},
+                    {"AttributeName": "verified_at", "KeyType": "RANGE"},
+                ],
+                "Projection": {
+                    "ProjectionType": "INCLUDE",
+                    "NonKeyAttributes": [
+                        "submitted_claim",
+                        "verdict",
+                        "confidence",
+                        "category",
+                    ],
+                },
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": read_capacity_units,
+                    "WriteCapacityUnits": write_capacity_units,
+                },
+            }
+        ],
         BillingMode="PROVISIONED",
         ProvisionedThroughput={
             "ReadCapacityUnits": read_capacity_units,

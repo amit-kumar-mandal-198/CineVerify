@@ -52,8 +52,19 @@ const FAQ_ITEMS = [
   },
   {
     question: "Where can I find claims I already checked?",
-    answer:
-      "Recent verifications appear at the bottom of the home page and in the full History archive, where you can filter by verdict or category.",
+    answer: (
+      <>
+        Recent verifications appear in the left history sidebar on{" "}
+        <Link href="/verify" className="font-semibold text-[var(--ink-900)] underline">
+          Verify Claim
+        </Link>{" "}
+        and in the full{" "}
+        <Link href="/history" className="font-semibold text-[var(--ink-900)] underline">
+          History archive
+        </Link>
+        , where you can search and filter by verdict or category.
+      </>
+    ),
   },
 ] as const;
 

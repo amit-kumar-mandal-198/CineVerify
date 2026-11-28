@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from functools import lru_cache
+
 from google import genai
 from google.genai import types
 
@@ -18,7 +20,7 @@ _PLACEHOLDER_GEMINI_KEY: str = "your_gemini_api_key_here"
 # Pretrained NLI cross-encoder for claim-evidence stance classification
 NLI_MODEL_NAME: str = "cross-encoder/nli-deberta-v3-base"
 
-# Bi-encoder for optional passage similarity filtering / deduplication
+# Bi-encoder for passage similarity filtering / ranking
 EMBEDDING_MODEL_NAME: str = "sentence-transformers/all-MiniLM-L6-v2"
 
 # Verdict decision thresholds (tune during Phase 5 evaluation)
@@ -34,11 +36,18 @@ def has_valid_gemini_key() -> bool:
     return bool(key and key != _PLACEHOLDER_GEMINI_KEY)
 
 
-def create_gemini_client() -> genai.Client:
-    """Initialize a Google GenAI client without multi-second 429 retry stalls."""
+@lru_cache(maxsize=1)
+def _cached_gemini_client(api_key: str) -> genai.Client:
+    """Reuse a single HTTP client pool across claim extraction, explanation, and follow-ups."""
     return genai.Client(
-        api_key=settings.GEMINI_API_KEY,
+        api_key=api_key,
         http_options=types.HttpOptions(
+            timeout=10_000,
             retry_options=types.HttpRetryOptions(attempts=1),
         ),
     )
+
+
+def create_gemini_client() -> genai.Client:
+    """Return a cached Google GenAI client without multi-second 429 retry stalls."""
+    return _cached_gemini_client(settings.GEMINI_API_KEY)

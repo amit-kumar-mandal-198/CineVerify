@@ -6,6 +6,7 @@ from functools import lru_cache
 from typing import Dict, List
 
 import numpy as np
+import torch
 from sentence_transformers import CrossEncoder
 
 from app.core.models_config import NLI_MODEL_NAME
@@ -22,7 +23,7 @@ _DEFAULT_ID_TO_STANCE: Dict[int, StanceLabel] = {
 @lru_cache(maxsize=1)
 def _get_nli_model() -> CrossEncoder:
     """Lazy-load and cache the NLI CrossEncoder model once per process."""
-    return CrossEncoder(NLI_MODEL_NAME)
+    return CrossEncoder(NLI_MODEL_NAME, max_length=256)
 
 
 def _resolve_id_to_stance(model: object) -> Dict[int, StanceLabel]:
@@ -62,6 +63,19 @@ def _ensure_probabilities(scores: np.ndarray) -> np.ndarray:
     return exps / np.sum(exps, axis=1, keepdims=True)
 
 
+def _build_premise(passage: EvidencePassage) -> str:
+    """Include article headline and date in the NLI premise for richer context."""
+    header_parts: List[str] = []
+    title = (passage.title or "").strip()
+    if title:
+        header_parts.append(f"Headline: {title}")
+    if passage.published_date:
+        header_parts.append(f"Published: {passage.published_date}")
+    if not header_parts:
+        return passage.text
+    return f"[{' | '.join(header_parts)}] {passage.text}"
+
+
 def verify_claim(core_claim: str, passages: List[EvidencePassage]) -> List[NLIResult]:
     """Classify each evidence passage as supports, contradicts, or neutral vs. core_claim."""
     if not passages or not (core_claim or "").strip():
@@ -70,14 +84,16 @@ def verify_claim(core_claim: str, passages: List[EvidencePassage]) -> List[NLIRe
     model = _get_nli_model()
     id_to_stance = _resolve_id_to_stance(model)
 
-    # NLI expects (premise, hypothesis) = (evidence passage text, core claim).
-    pairs = [(passage.text, core_claim) for passage in passages]
-    raw_scores = model.predict(
-        pairs,
-        apply_softmax=True,
-        convert_to_numpy=True,
-        show_progress_bar=False,
-    )
+    # NLI expects (premise, hypothesis) = (enriched evidence passage, core claim).
+    pairs = [(_build_premise(passage), core_claim) for passage in passages]
+    with torch.inference_mode():
+        raw_scores = model.predict(
+            pairs,
+            batch_size=8,
+            apply_softmax=True,
+            convert_to_numpy=True,
+            show_progress_bar=False,
+        )
     probs = _ensure_probabilities(raw_scores)
 
     results: List[NLIResult] = []
